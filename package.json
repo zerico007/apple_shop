@@ -2,7 +2,7 @@
   "name": "shop-frontend",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://zerico007.github.io/apple_shop",
+  "homepage": "https://zerico007.github.io/apple_shop",
   "dependencies": {
     "@emotion/react": "^11.1.4",
     "@emotion/styled": "^11.0.0",
