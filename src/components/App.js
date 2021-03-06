@@ -194,7 +194,7 @@ function App() {
             mobile={mobile}
             />}
             <Switch>
-                <Route exact path='/' render={(props) => (
+                <Route exact path='/apple_shop' render={(props) => (
                     <Login { ...props} handleLogin={handleLogin} />
                 )}
                 />
