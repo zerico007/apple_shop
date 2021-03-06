@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/Apple-Shop/static/css/main.5c981b68.chunk.css",
+    "main.js": "/Apple-Shop/static/js/main.7c54686e.chunk.js",
+    "main.js.map": "/Apple-Shop/static/js/main.7c54686e.chunk.js.map",
+    "runtime-main.js": "/Apple-Shop/static/js/runtime-main.ba395b2e.js",
+    "runtime-main.js.map": "/Apple-Shop/static/js/runtime-main.ba395b2e.js.map",
+    "static/css/2.83342f34.chunk.css": "/Apple-Shop/static/css/2.83342f34.chunk.css",
+    "static/js/2.40191306.chunk.js": "/Apple-Shop/static/js/2.40191306.chunk.js",
+    "static/js/2.40191306.chunk.js.map": "/Apple-Shop/static/js/2.40191306.chunk.js.map",
+    "index.html": "/Apple-Shop/index.html",
+    "static/css/2.83342f34.chunk.css.map": "/Apple-Shop/static/css/2.83342f34.chunk.css.map",
+    "static/css/main.5c981b68.chunk.css.map": "/Apple-Shop/static/css/main.5c981b68.chunk.css.map",
+    "static/js/2.40191306.chunk.js.LICENSE.txt": "/Apple-Shop/static/js/2.40191306.chunk.js.LICENSE.txt",
+    "static/media/apple-products.7abda74a.jpeg": "/Apple-Shop/static/media/apple-products.7abda74a.jpeg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.ba395b2e.js",
+    "static/css/2.83342f34.chunk.css",
+    "static/js/2.40191306.chunk.js",
+    "static/css/main.5c981b68.chunk.css",
+    "static/js/main.7c54686e.chunk.js"
+  ]
+}
