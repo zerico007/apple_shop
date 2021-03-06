@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import OrderView from './OrderView';
+import {IMAGES_URL} from '../constants';
 
 function Orders({orders, mobile}) {
 
@@ -20,7 +21,7 @@ function Orders({orders, mobile}) {
             {orders?.map((order, i) => (
                 <OrderView 
                 title={order.product}
-                img_url={`${window.env.IMAGES_URL}/${order.productImage}`}
+                img_url={`${IMAGES_URL}/${order.productImage}`}
                 price={order.unitPrice}
                 total={order.Total}
                 quantity={order.quantity}

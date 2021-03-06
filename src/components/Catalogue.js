@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import ProductView from './ProductView';
 import SearchBar from './SearchBar';
+import {IMAGES_URL} from '../constants';
 
 const Wrapper = styled.div`
         display: flex;
@@ -29,7 +30,7 @@ function Catalogue({products, user, deleteProduct, updateProductAvailability, mo
             products.map((product, i) => (
                 <ProductView price={product.price} 
                 title={product.name} 
-                img_url={product.productImage && `${window.env.IMAGES_URL}/${product.productImage}`}
+                img_url={product.productImage && `${IMAGES_URL}/${product.productImage}`}
                 id={product.id}
                 videoURL={product.videoURL}
                 available={product.available}
