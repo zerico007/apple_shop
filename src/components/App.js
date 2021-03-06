@@ -180,7 +180,7 @@ function App() {
         setProducts([]);
         localStorage.clear();
         toast.dark('Logged out.', toastConfig);
-        history.push('/');
+        history.push('/apple_shop');
     }
     
     return (
