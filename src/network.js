@@ -1,8 +1,9 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+import {BASE_URL} from './constants';
 
 const shopApiInstance = axios.create({
-    baseURL: window.env.SHOP_REST_API_BASE_URL
+    baseURL: BASE_URL
 
 });
 
