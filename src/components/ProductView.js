@@ -85,6 +85,8 @@ function ProductView({img_url, price, title, id, videoURL, user, deleteProduct, 
                 'content-type': 'multipart/form-data'
             }
         };
+        toggle('modal');
+        setDisplay('');
         updatedImage ? updateProduct(e, id, data, config) : updateProduct(e, id, data);
     }
 
