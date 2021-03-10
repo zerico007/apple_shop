@@ -153,7 +153,7 @@ function Register({handleRegister}) {
                 </PasswordChecks>}
                 <Button disabled={!passwordsMatch || !passwordRegex.test(password)} type="submit">Register</Button>
                 </form>
-                <footer><Link to='/'><LoginButton>Log in instead?</LoginButton></Link></footer>
+                <footer><Link to='/apple_shop'><LoginButton>Log in instead?</LoginButton></Link></footer>
             </FormDiv>
         </Fragment>
     )

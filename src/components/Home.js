@@ -39,7 +39,7 @@ function Home () {
             <StyledWrapper>
                 <h1 className="welcome">Welcome to the Apple Shop <i className="fab fa-apple"></i>!</h1>
                 <h3 className="landing">Your one stop shopping experience for all things Apple. We pride ourselves in being a premier supplier of Apple products.</h3>
-                <Link to='/products'><Button>Browse</Button></Link>
+                <Link to='/apple_shop/products'><Button>Browse</Button></Link>
             </StyledWrapper>
         </StyledContainer>
     )

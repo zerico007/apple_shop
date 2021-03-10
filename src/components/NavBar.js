@@ -96,7 +96,7 @@ function NavBar({logout, getOrders, getAdminOrders, user, mobile }){
     return (
         <Nav style={{opacity: translucent ? '0.8' : '1'}}>
             {!mobile && 
-            <Link to='/home'>
+            <Link to='/apple_shop/home'>
             <div className="title" style={logoStyle}> <i className="fab fa-apple"></i> Shop
             <div className="greeting" style={greetingStyle}>Welcome back, <em>{user.username}</em></div>
             </div>
@@ -104,20 +104,20 @@ function NavBar({logout, getOrders, getAdminOrders, user, mobile }){
             {!mobile && 
             <Fragment>
             <NavButtonsDiv>
-                <Link to='/orders'>
+                <Link to='/apple_shop/orders'>
                     <NavButton onClick={() => {
                         isUserAdmin ? getAdminOrders() : getOrders()
                     }}>{isUserAdmin ? 'Orders' : 'My Orders'}</NavButton>
                 </Link>
                 {isUserAdmin && 
-                        <Link to='/create-product'>
+                        <Link to='/apple_shop/create-product'>
                         <NavButton>Create a Product</NavButton>
                         </Link>
                 }
-                <Link to='/products'>
+                <Link to='/apple_shop/products'>
                     <NavButton>Products</NavButton>
                 </Link>
-                <Link to='/password'>
+                <Link to='/apple_shop/password'>
                     <NavButton>Manage Passwords</NavButton>
                 </Link>
                 <NavButton onClick={logout}>Logout</NavButton>
@@ -133,21 +133,21 @@ function NavBar({logout, getOrders, getAdminOrders, user, mobile }){
             </NavButton>}
             {showNav && 
             <MobileNavButtonsDiv onClick={() => mobile && setShowNav(!showNav)}>
-                <Link to='/home'>
+                <Link to='/apple_shop/home'>
                     <NavButton mobileSite={true}>Home</NavButton>
                 </Link>
-                <Link to='/orders'>
+                <Link to='/apple_shop/orders'>
                     <NavButton mobileSite={true} onClick={isUserAdmin ? getAdminOrders : getOrders}>{isUserAdmin ? 'Orders' : 'My Orders'}</NavButton>
                 </Link>
                 {isUserAdmin && 
-                        <Link to='/create-product'>
+                        <Link to='/apple_shop/create-product'>
                         <NavButton mobileSite={true}>Create a Product</NavButton>
                         </Link>
                 }
-                <Link to='/products'>
+                <Link to='/apple_shop/products'>
                     <NavButton mobileSite={true}>Products</NavButton>
                 </Link>
-                <Link to='/password'>
+                <Link to='/apple_shop/password'>
                     <NavButton mobileSite={true}>Manage Passwords</NavButton>
                 </Link>
                 <div className="logout" 

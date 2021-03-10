@@ -84,7 +84,7 @@ function App() {
             getProducts();
             user.role === 'administrator' ? getAdminOrders() : getOrders();
             toast.success("Successfully logged in!", toastConfig);
-            history.push('/home');
+            history.push('/apple_shop/home');
         })
         .catch(err => {
             setProgress(100);
@@ -105,7 +105,7 @@ function App() {
             setProgress(100);
             console.log(response.data);
             toast.success('Account successfully created. Login here.', toastConfig);
-            history.push('/');
+            history.push('/apple_shop');
         }).catch(err => {
             setProgress(100);
             toast.error(err.message, toastConfig);
@@ -118,7 +118,7 @@ function App() {
             console.log(response.data);
             toast.success('Product successfully created', toastConfig);
             getProducts();
-            history.push('/products');
+            history.push('/apple_shop/products');
         }).catch(err => {
             toast.error(err.message, toastConfig);
         })
@@ -131,7 +131,7 @@ function App() {
             console.log(response.data);
             toast.success('Product successfully updated', toastConfig);
             getProducts();
-            history.push('/products');
+            history.push('/apple_shop/products');
         }).catch(err => {
             toast.error(err.message, toastConfig);
         })
@@ -147,7 +147,7 @@ function App() {
             console.log(response.data);
             toast.success('Products successfully deleted', toastConfig);
             getProducts();
-            history.push('/products');
+            history.push('/apple_shop/products');
         }).catch(err => {
             toast.error(err.message, toastConfig);
         })
@@ -158,7 +158,7 @@ function App() {
         .then(response => {
             console.log(response.data);
             toast.success('Password updated successfully!', toastConfig);
-            history.push('/home');
+            history.push('/apple_shop/home');
         }).catch(err => {
             const error = err.message.includes('401') ? 'Incorrect password. Try again.' : err.message; 
             toast.error(error, toastConfig);
@@ -206,16 +206,16 @@ function App() {
             mobile={mobile}
             />}
             <Switch>
-                <Route path='/apple_shop' render={(props) => (
+                <Route exact path='/apple_shop' render={(props) => (
                     <Login { ...props} handleLogin={handleLogin} />
                 )}
                 />
-                <Route path='/home' component={Home}/>
-                <Route path='/register' render={(props) => (
+                <Route path='/apple_shop/home' component={Home}/>
+                <Route path='/apple_shop/register' render={(props) => (
                     <Register { ...props} handleRegister={handleRegister} />
                 )}
                 />
-                <Route path='/products' render={(props) => (
+                <Route path='/apple_shop/products' render={(props) => (
                     <Catalogue { ...props} 
                     products={products} 
                     user={user} 
@@ -226,14 +226,14 @@ function App() {
                     />
                 )}
                 />
-                <Route path='/orders' render={(props) => (
+                <Route path='/apple_shop/orders' render={(props) => (
                     <Orders { ...props} orders={orders} mobile={mobile}/>
                 )}
                 />
-                <Route path='/create-product' render={(props) => (
+                <Route path='/apple_shop/create-product' render={(props) => (
                     <CreateProduct { ...props} addProduct={addProduct} />
                 )}/>
-                <Route path='/password' render={(props) => (
+                <Route path='/apple_shop/password' render={(props) => (
                     <PasswordUpdate { ...props} user={user} updatePassword={updatePassword} />
                 )}/>
             </Switch>

@@ -52,7 +52,7 @@ function Login({handleLogin}) {
                 ref={passwordRef}/><br></br>
                 <Button type="submit">Login</Button>
                 </form>
-                <footer>New user? <Link to='/register'><RegisterButton>Register here</RegisterButton></Link></footer>
+                <footer>New user? <Link to='/apple_shop/register'><RegisterButton>Register here</RegisterButton></Link></footer>
             </FormDiv>
         </Fragment>
     )
