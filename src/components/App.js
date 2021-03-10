@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import jwt_decode from "jwt-decode";
+import LoadingBar from 'react-top-loading-bar';
 import {setBearerToken, shopApiInstance} from '../network';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -20,10 +21,11 @@ function App() {
 
     const [ products, setProducts ] = usePersistedState('products', []);
     //const [ token, setToken ] = usePersistedState('token', '');
-    const [user, setUser] = usePersistedState('user', {});
+    const [ user, setUser ] = usePersistedState('user', {});
     const [authenticated, setAuthenticated] = usePersistedState('authenticated', false);
     const [ orders, setOrders ] = usePersistedState('orders', []);
     const [ mobile, setMobile ] = usePersistedState('mobile', false);
+    const [ progress, setProgress ] = usePersistedState('progress', 0);
     
     let history = useHistory();
 
@@ -67,11 +69,13 @@ function App() {
     }
 
     const handleLogin = (e, params) => {
+        setProgress(40);
         e.preventDefault();
         //console.log(window.env.EXPOSED_API_URL)
         shopApiInstance.post('/users/signin', params)
         .then(async response => {
             e.target.reset();
+            setProgress(100);
             //await setToken(response.data.token);
             await localStorage.setItem('token', response.data.token)
             await setBearerToken(response.data.token);
@@ -83,6 +87,7 @@ function App() {
             history.push('/home');
         })
         .catch(err => {
+            setProgress(100);
             console.log(err);
             const error = () => {
                 if(err.message.includes('401')) return 'Email/Password combination incorrect. Try again.';
@@ -93,16 +98,18 @@ function App() {
     }
 
     const handleRegister = (e, params) => {
+        setProgress(40);
         e.preventDefault();
         shopApiInstance.post('/users/signup', params)
         .then(response => {
+            setProgress(100);
             console.log(response.data);
             toast.success('Account successfully created. Login here.', toastConfig);
             history.push('/');
         }).catch(err => {
+            setProgress(100);
             toast.error(err.message, toastConfig);
         })
-        console.log(e.target, params);
     }
 
     const addProduct = (e, params) => {
@@ -185,6 +192,11 @@ function App() {
     
     return (
         <Fragment>
+            <LoadingBar
+                color="blue"
+                progress={progress}
+                onLoaderFinished={() => setProgress(0)}
+                />
             <ToastContainer />
             {authenticated && <NavBar 
             logout={logout} 
