@@ -185,7 +185,7 @@ function App() {
         setBearerToken('');
         setAuthenticated(false);
         setProducts([]);
-        localStorage.clear();
+        sessionStorage.clear();
         toast.dark('Logged out.', toastConfig);
         history.push('/apple_shop');
     }
