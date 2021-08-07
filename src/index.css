@@ -28,6 +28,17 @@ html {
   scroll-behavior: smooth;
 }
 
+@keyframes enterTopRight {
+  0% {
+    opacity: 0;
+    transform: translate(-2.5rem, -2.5rem) scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0) scale(1);
+  }
+}
+
 .product-img {
   width: 210px;
   height: auto;

@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/apple_shop/static/css/main.5c981b68.chunk.css",
-    "main.js": "/apple_shop/static/js/main.e961d36f.chunk.js",
-    "main.js.map": "/apple_shop/static/js/main.e961d36f.chunk.js.map",
+    "main.js": "/apple_shop/static/js/main.d1e00fbe.chunk.js",
+    "main.js.map": "/apple_shop/static/js/main.d1e00fbe.chunk.js.map",
     "runtime-main.js": "/apple_shop/static/js/runtime-main.1f50d506.js",
     "runtime-main.js.map": "/apple_shop/static/js/runtime-main.1f50d506.js.map",
     "static/css/2.83342f34.chunk.css": "/apple_shop/static/css/2.83342f34.chunk.css",
@@ -20,6 +20,6 @@
     "static/css/2.83342f34.chunk.css",
     "static/js/2.8b4f926b.chunk.js",
     "static/css/main.5c981b68.chunk.css",
-    "static/js/main.e961d36f.chunk.js"
+    "static/js/main.d1e00fbe.chunk.js"
   ]
 }

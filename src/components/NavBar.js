@@ -59,8 +59,10 @@ const MobileNavButtonsDiv = styled.div`
   flex-direction: column;
   z-index: 100;
   width: 105vw;
-  background: url("${wave}");
-  height: 90vh;
+  animation: enterTopRight 1s;
+  transform-origin: 0% 0%;
+  background-image: url("${wave}");
+  height: 100vh;
 `;
 
 function NavBar({ logout, getOrders, getAdminOrders, user, mobile }) {
