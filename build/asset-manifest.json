@@ -1,25 +1,25 @@
 {
   "files": {
     "main.css": "/apple_shop/static/css/main.1ada37d3.chunk.css",
-    "main.js": "/apple_shop/static/js/main.dde60361.chunk.js",
-    "main.js.map": "/apple_shop/static/js/main.dde60361.chunk.js.map",
+    "main.js": "/apple_shop/static/js/main.34d4e698.chunk.js",
+    "main.js.map": "/apple_shop/static/js/main.34d4e698.chunk.js.map",
     "runtime-main.js": "/apple_shop/static/js/runtime-main.1f50d506.js",
     "runtime-main.js.map": "/apple_shop/static/js/runtime-main.1f50d506.js.map",
     "static/css/2.83342f34.chunk.css": "/apple_shop/static/css/2.83342f34.chunk.css",
-    "static/js/2.8b4f926b.chunk.js": "/apple_shop/static/js/2.8b4f926b.chunk.js",
-    "static/js/2.8b4f926b.chunk.js.map": "/apple_shop/static/js/2.8b4f926b.chunk.js.map",
+    "static/js/2.f10a46c0.chunk.js": "/apple_shop/static/js/2.f10a46c0.chunk.js",
+    "static/js/2.f10a46c0.chunk.js.map": "/apple_shop/static/js/2.f10a46c0.chunk.js.map",
     "index.html": "/apple_shop/index.html",
     "static/css/2.83342f34.chunk.css.map": "/apple_shop/static/css/2.83342f34.chunk.css.map",
     "static/css/main.1ada37d3.chunk.css.map": "/apple_shop/static/css/main.1ada37d3.chunk.css.map",
-    "static/js/2.8b4f926b.chunk.js.LICENSE.txt": "/apple_shop/static/js/2.8b4f926b.chunk.js.LICENSE.txt",
+    "static/js/2.f10a46c0.chunk.js.LICENSE.txt": "/apple_shop/static/js/2.f10a46c0.chunk.js.LICENSE.txt",
     "static/media/apple-products.7abda74a.jpeg": "/apple_shop/static/media/apple-products.7abda74a.jpeg",
     "static/media/apple_shop_wave.a2b3e177.svg": "/apple_shop/static/media/apple_shop_wave.a2b3e177.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.1f50d506.js",
     "static/css/2.83342f34.chunk.css",
-    "static/js/2.8b4f926b.chunk.js",
+    "static/js/2.f10a46c0.chunk.js",
     "static/css/main.1ada37d3.chunk.css",
-    "static/js/main.dde60361.chunk.js"
+    "static/js/main.34d4e698.chunk.js"
   ]
 }

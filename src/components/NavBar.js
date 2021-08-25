@@ -230,6 +230,7 @@ function NavBar({
                 marginTop: "10px",
                 width: "120px",
                 fontSize: "20px",
+                height: "50px",
               }}
             >
               {showNav ? (
