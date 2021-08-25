@@ -57,10 +57,10 @@ function OrderView({
           boxSizing: "border-box",
         }}
       >
-        {orderHeader("user", "USER", user)}
+        {!mobile && orderHeader("user", "USER", user)}
         {orderHeader("date-placed", "ORDER PLACED", date)}
         {orderHeader("order-total", "TOTAL", total)}
-        {orderHeader("order-number", "ORDER #", orderId)}
+        {!mobile && orderHeader("order-number", "ORDER #", orderId)}
       </div>
       {orderItems?.map((item, i) => (
         <OrderItem
