@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Route, Switch, useHistory } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import LoadingBar from "react-top-loading-bar";
@@ -11,6 +11,7 @@ import Catalogue from "./Catalogue";
 import NavBar from "./NavBar";
 import Orders from "./Orders";
 import Home from "./Home";
+import Cart from "./Cart";
 import CreateProduct from "./CreateProduct";
 import PasswordUpdate from "./PasswordUpdate";
 import { usePersistedState } from "../utils";
@@ -18,6 +19,7 @@ import { toastConfig } from "./styledElements";
 
 function App() {
   const [products, setProducts] = usePersistedState("products", []);
+  const [cart, setCart] = usePersistedState("cart", {});
   //const [ token, setToken ] = usePersistedState('token', '');
   const [user, setUser] = usePersistedState("user", {});
   const [authenticated, setAuthenticated] = usePersistedState(
@@ -27,12 +29,20 @@ function App() {
   const [orders, setOrders] = usePersistedState("orders", []);
   const [mobile, setMobile] = usePersistedState("mobile", false);
   const [progress, setProgress] = usePersistedState("progress", 0);
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    const count = cart.items
+      ? cart.items.reduce((acc, item) => acc + item.quantity, 0)
+      : 0;
+    setCartCount(count);
+  }, [cart]);
 
   let history = useHistory();
 
   useEffect(() => {
     window.addEventListener("load", () => {
-      setBearerToken(localStorage.getItem("token") || "");
+      setBearerToken(sessionStorage.token || "");
     });
     window.addEventListener("resize", () =>
       window.innerWidth < 768 ? setMobile(true) : setMobile(false)
@@ -43,6 +53,15 @@ function App() {
   useEffect(() => {
     window.innerWidth < 768 ? setMobile(true) : setMobile(false);
   }, [setMobile]);
+
+  const getCart = () => {
+    shopApiInstance
+      .get("/cart")
+      .then((response) => {
+        response.data.message ? setCart({}) : setCart(response.data);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const getAdminOrders = () => {
     shopApiInstance
@@ -91,11 +110,12 @@ function App() {
         e.target.reset();
         setProgress(100);
         //await setToken(response.data.token);
-        await localStorage.setItem("token", response.data.token);
+        await sessionStorage.setItem("token", response.data.token);
         await setBearerToken(response.data.token);
         await setAuthenticated(true);
         await getUser(response.data.token);
         getProducts();
+        getCart();
         user.role === "administrator" ? getAdminOrders() : getOrders();
         toast.success("Successfully logged in!", toastConfig);
         history.push("/apple_shop/home");
@@ -209,6 +229,49 @@ function App() {
       });
   };
 
+  const updateCart = (params) => {
+    shopApiInstance
+      .post("/cart", params)
+      .then((response) => {
+        console.log(response.data);
+        getCart();
+        toast.success("Cart updated successfully", toastConfig);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(err.message, toastConfig);
+      });
+  };
+
+  const removeFromCart = (params) => {
+    shopApiInstance
+      .put("/cart/remove", params)
+      .then((response) => {
+        console.log(response.data);
+        getCart();
+        toast.success("Cart updated successfully", toastConfig);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(err.message, toastConfig);
+      });
+  };
+
+  const placeOrder = () => {
+    shopApiInstance
+      .post("/orders")
+      .then((response) => {
+        console.log(response.data);
+        getCart();
+        user.role === "administrator" ? getAdminOrders() : getOrders();
+        toast.success("Order placed successfully", toastConfig);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(err.message, toastConfig);
+      });
+  };
+
   const logout = () => {
     //setToken('');
     setBearerToken("");
@@ -234,6 +297,7 @@ function App() {
           getAdminOrders={getAdminOrders}
           user={user}
           mobile={mobile}
+          cartCount={cartCount}
         />
       )}
       <Switch>
@@ -256,6 +320,7 @@ function App() {
               {...props}
               products={products}
               user={user}
+              updateCart={updateCart}
               deleteProduct={deleteProduct}
               updateProductAvailability={updateProductAvailability}
               updateProduct={updateProduct}
@@ -266,7 +331,26 @@ function App() {
         <Route
           path="/apple_shop/orders"
           render={(props) => (
-            <Orders {...props} orders={orders} mobile={mobile} />
+            <Orders
+              {...props}
+              orders={orders}
+              mobile={mobile}
+              updateCart={updateCart}
+            />
+          )}
+        />
+        <Route
+          path="/apple_shop/cart"
+          render={(props) => (
+            <Cart
+              {...props}
+              updateCart={updateCart}
+              cart={cart}
+              count={cartCount}
+              removeFromCart={removeFromCart}
+              placeOrder={placeOrder}
+              mobile={mobile}
+            />
           )}
         />
         <Route

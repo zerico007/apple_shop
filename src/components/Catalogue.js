@@ -22,6 +22,7 @@ function Catalogue({
   updateProductAvailability,
   mobile,
   updateProduct,
+  updateCart,
 }) {
   const [search, setSearch] = useState("");
 
@@ -45,6 +46,7 @@ function Catalogue({
             available={product.available}
             updateProductAvailability={updateProductAvailability}
             updateProduct={updateProduct}
+            updateCart={updateCart}
             user={user}
             deleteProduct={deleteProduct}
             mobile={mobile}

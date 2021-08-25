@@ -59,6 +59,7 @@ function ProductView({
   updateProductAvailability,
   mobile,
   updateProduct,
+  updateCart,
 }) {
   const [closeButton, setCloseButton] = useState(false);
   const [mountVideo, setMountVideo] = useState(false);
@@ -153,6 +154,7 @@ function ProductView({
         display={display}
         deleteProduct={deleteProduct}
         UpdateProductModal={UpdateProductModal}
+        updateCart={updateCart}
       />
       {mountVideo && (
         <ProductVideo
@@ -196,7 +198,7 @@ function ProductView({
           }}
           disabled={!available}
         >
-          {available ? "Add to order" : "Out of Stock"}
+          {available ? "Add to cart" : "Out of Stock"}
         </Button>
         <Button
           style={{ gridArea: "video" }}

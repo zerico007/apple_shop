@@ -1,6 +1,7 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
+import { ChevronDown, ShoppingCart } from "react-feather";
 import wave from "../assets/apple_shop_wave.svg";
 
 const Nav = styled.nav`
@@ -12,16 +13,17 @@ const Nav = styled.nav`
   background-color: #333d51;
   height: 67px;
   padding: 10px;
-  z-index: 999;
+  z-index: 8;
 `;
 
 const NavButton = styled.button`
   width: ${(props) => (props.mobileSite ? "100%" : "120px")};
   height: ${(props) => (props.mobileSite ? "2rem" : "60px")};
-  background-color: #333d51;
-  color: #f4f3ea;
+  background: ${(props) => (props.mobileSite ? "#333d51" : "none")};
+  color: ${(props) => (props.mobileSite ? "#f4f3ea" : "#333d51")};
   font-family: "Roboto Condensed", sans-serif;
   font-size: ${(props) => (props.mobileSite ? "24px" : "16px")};
+  font-weight: bold;
   outline: none;
   cursor: pointer;
   border: none;
@@ -38,14 +40,31 @@ const NavButton = styled.button`
 `;
 
 const NavButtonsDiv = styled.div`
-  position: relative;
-  float: right;
+  position: absolute;
+  top: 72px;
+  transform: translateX(-0.85rem);
+  right: 100px;
+  z-index: 10;
+  background: white;
+  width: 18rem;
+  height: auto;
+  padding: 1rem;
   display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  width: 75vw;
-  height: 100px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   box-sizing: border-box;
+  border-radius: 0.3rem;
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 71.2%;
+    margin-left: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent white transparent;
+  }
 `;
 
 const MobileNavButtonsDiv = styled.div`
@@ -59,17 +78,24 @@ const MobileNavButtonsDiv = styled.div`
   flex-direction: column;
   z-index: 100;
   width: 105vw;
-  animation: enterTopRight 1s;
+  animation: enterTopRight 0.5s;
   transform-origin: 0% 0%;
   background-image: url("${wave}");
   height: 100vh;
 `;
 
-function NavBar({ logout, getOrders, getAdminOrders, user, mobile }) {
+function NavBar({
+  logout,
+  getOrders,
+  getAdminOrders,
+  user,
+  mobile,
+  cartCount,
+}) {
   const logoStyle = {
     float: "left",
     marginLeft: "20px",
-    marginTop: "0px",
+    marginTop: "1.5rem",
     color: "#F4F3EA",
     fontSize: "24px",
   };
@@ -77,15 +103,24 @@ function NavBar({ logout, getOrders, getAdminOrders, user, mobile }) {
   const greetingStyle = {
     color: "#F4F3EA",
     fontSize: "14px",
-    textShadow: "none",
-    marginTop: "10px",
+    display: "flex",
+    flexDirection: "column",
+    cursor: "pointer",
+    marginTop: "0.7rem",
+    justifyContent: "center",
+    alignItems: "center",
     zIndex: "101",
+    height: "auto",
+    minHeight: "60px",
   };
 
   const [showNav, setShowNav] = useState(false);
   const [translucent, setTranslucent] = useState(false);
+  const [showNavOptions, setShowNavOptions] = useState(false);
 
   const isUserAdmin = user.role === "administrator";
+
+  const showNavDropDown = !mobile && showNavOptions;
 
   useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -94,106 +129,185 @@ function NavBar({ logout, getOrders, getAdminOrders, user, mobile }) {
   }, []);
 
   return (
-    <Nav style={{ opacity: translucent ? "0.8" : "1" }}>
-      {!mobile && (
-        <Link to="/apple_shop/home">
-          <div className="title" style={logoStyle}>
-            {" "}
-            <i className="fab fa-apple"></i> Shop
-            <div className="greeting" style={greetingStyle}>
-              Welcome back, <em>{user.username}</em>
+    <>
+      <Nav style={{ opacity: translucent ? "0.8" : "1" }}>
+        {!mobile && (
+          <Link to="/apple_shop/home">
+            <div className="title" style={logoStyle}>
+              {" "}
+              <i className="fab fa-apple"></i> Shop
             </div>
+          </Link>
+        )}
+        {!mobile && (
+          <div
+            className="right-nav"
+            style={{
+              float: "right",
+              marginRight: "5rem",
+              display: "flex",
+              width: "15rem",
+              alignItems: "center",
+              justifyContent: "space-around",
+            }}
+          >
+            <div
+              className="options"
+              onMouseEnter={() => setShowNavOptions(true)}
+              onMouseLeave={() => setShowNavOptions(false)}
+              style={greetingStyle}
+            >
+              <p style={{ margin: "0" }}>{`Hello, ${user.username}`}</p>
+              <div
+                style={{
+                  alignItems: "center",
+                  display: "flex",
+                  fontWeight: "bold",
+                  fontSize: "1rem",
+                }}
+              >
+                Accounts & Lists
+                <ChevronDown size={16} />
+              </div>
+              {showNavDropDown && (
+                <NavButtonsDiv>
+                  <Link to="/apple_shop/orders">
+                    <NavButton
+                      onClick={() => {
+                        isUserAdmin ? getAdminOrders() : getOrders();
+                        setShowNavOptions(false);
+                      }}
+                    >
+                      {isUserAdmin ? "Orders" : "My Orders"}
+                    </NavButton>
+                  </Link>
+                  {isUserAdmin && (
+                    <Link to="/apple_shop/create-product">
+                      <NavButton onClick={() => setShowNavOptions(false)}>
+                        Create a Product
+                      </NavButton>
+                    </Link>
+                  )}
+                  <Link to="/apple_shop/products">
+                    <NavButton onClick={() => setShowNavOptions(false)}>
+                      Products
+                    </NavButton>
+                  </Link>
+                  <Link to="/apple_shop/password">
+                    <NavButton onClick={() => setShowNavOptions(false)}>
+                      Manage Passwords
+                    </NavButton>
+                  </Link>
+                  <NavButton onClick={logout}>Logout</NavButton>
+                </NavButtonsDiv>
+              )}
+            </div>
+            <Link to="/apple_shop/cart">
+              <div
+                className="cart"
+                style={{
+                  marginTop: "1rem",
+                  cursor: "pointer",
+                  color: "white",
+                  textAlign: "center",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <ShoppingCart style={{ marginRight: "0.4rem" }} />
+                Cart <sup>{` (${cartCount})`}</sup>
+              </div>
+            </Link>
           </div>
-        </Link>
-      )}
-      {!mobile && (
-        <Fragment>
-          <NavButtonsDiv>
+        )}
+        {mobile && (
+          <>
+            <NavButton
+              mobileSite={mobile}
+              onClick={() => setShowNav(!showNav)}
+              style={{
+                float: "left",
+                marginTop: "10px",
+                width: "120px",
+                fontSize: "20px",
+              }}
+            >
+              {showNav ? (
+                <i className="fas fa-times fa-2x"></i>
+              ) : (
+                <i className="fas fa-bars fa-2x"></i>
+              )}
+            </NavButton>
+            <Link to="/apple_shop/cart">
+              <div
+                className="cart"
+                style={{
+                  marginTop: "1rem",
+                  cursor: "pointer",
+                  color: "white",
+                  textAlign: "center",
+                  display: "flex",
+                  float: "right",
+                  marginRight: "3rem",
+                  alignItems: "center",
+                }}
+              >
+                <ShoppingCart size={32} style={{ marginRight: "0.4rem" }} />
+                Cart <sup>{` (${cartCount})`}</sup>
+              </div>
+            </Link>
+          </>
+        )}
+        {showNav && (
+          <MobileNavButtonsDiv onClick={() => mobile && setShowNav(!showNav)}>
+            <Link to="/apple_shop/home">
+              <NavButton mobileSite={true}>Home</NavButton>
+            </Link>
             <Link to="/apple_shop/orders">
               <NavButton
-                onClick={() => {
-                  isUserAdmin ? getAdminOrders() : getOrders();
-                }}
+                mobileSite={true}
+                onClick={isUserAdmin ? getAdminOrders : getOrders}
               >
                 {isUserAdmin ? "Orders" : "My Orders"}
               </NavButton>
             </Link>
             {isUserAdmin && (
               <Link to="/apple_shop/create-product">
-                <NavButton>Create a Product</NavButton>
+                <NavButton mobileSite={true}>Create a Product</NavButton>
               </Link>
             )}
             <Link to="/apple_shop/products">
-              <NavButton>Products</NavButton>
+              <NavButton mobileSite={true}>Products</NavButton>
             </Link>
             <Link to="/apple_shop/password">
-              <NavButton>Manage Passwords</NavButton>
+              <NavButton mobileSite={true}>Manage Passwords</NavButton>
             </Link>
-            <NavButton onClick={logout}>Logout</NavButton>
-          </NavButtonsDiv>
-        </Fragment>
-      )}
-      {mobile && (
-        <NavButton
-          onClick={() => setShowNav(!showNav)}
-          style={{ float: "left" }}
-        >
-          {showNav ? (
-            <i className="fas fa-times fa-2x"></i>
-          ) : (
-            <i className="fas fa-bars fa-2x"></i>
-          )}
-        </NavButton>
-      )}
-      {showNav && (
-        <MobileNavButtonsDiv onClick={() => mobile && setShowNav(!showNav)}>
-          <Link to="/apple_shop/home">
-            <NavButton mobileSite={true}>Home</NavButton>
-          </Link>
-          <Link to="/apple_shop/orders">
-            <NavButton
-              mobileSite={true}
-              onClick={isUserAdmin ? getAdminOrders : getOrders}
+            <div
+              className="logout"
+              style={{
+                width: "80vw",
+                left: "0",
+                position: "relative",
+                border: "none",
+                display: "flex",
+                alignItems: "flex-start",
+                marginTop: "10vh",
+              }}
             >
-              {isUserAdmin ? "Orders" : "My Orders"}
-            </NavButton>
-          </Link>
-          {isUserAdmin && (
-            <Link to="/apple_shop/create-product">
-              <NavButton mobileSite={true}>Create a Product</NavButton>
-            </Link>
-          )}
-          <Link to="/apple_shop/products">
-            <NavButton mobileSite={true}>Products</NavButton>
-          </Link>
-          <Link to="/apple_shop/password">
-            <NavButton mobileSite={true}>Manage Passwords</NavButton>
-          </Link>
-          <div
-            className="logout"
-            style={{
-              width: "80vw",
-              left: "0",
-              position: "relative",
-              border: "none",
-              display: "flex",
-              alignItems: "flex-start",
-              marginTop: "10vh",
-            }}
-          >
-            <Link to="/">
-              <NavButton
-                style={{ background: "none", color: "#333d51" }}
-                mobileSite={true}
-                onClick={logout}
-              >
-                Logout
-              </NavButton>
-            </Link>
-          </div>
-        </MobileNavButtonsDiv>
-      )}
-    </Nav>
+              <Link>
+                <NavButton
+                  style={{ background: "none", color: "#333d51" }}
+                  mobileSite={true}
+                  onClick={logout}
+                >
+                  Logout
+                </NavButton>
+              </Link>
+            </div>
+          </MobileNavButtonsDiv>
+        )}
+      </Nav>
+    </>
   );
 }
 
