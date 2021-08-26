@@ -41,7 +41,8 @@ html {
 
 .product-img {
   width: 210px;
-  height: auto;
+  height: 210px;
+  object-fit: contain;
 }
 
 .modal.on {

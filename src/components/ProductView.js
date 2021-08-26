@@ -8,26 +8,24 @@ const ProductDiv = styled.div`
   position: relative;
   z-index: 3;
   display: flex;
-
   @media (max-width: 768px) {
     display: flex;
     flex-direction: column;
     align-items: center;
     just0fy-content: center;
   }
-
   margin: 20px auto 20px auto;
   padding: 40px;
   border: none;
   border-radius: 0.5rem;
 
   width: 50vw;
-  height: 100%;
+  height: auto;
   background: white; ;
 `;
 
 const ImageDiv = styled.div`
-  width: 200px;
+  width: auto;
   height: auto;
   transition: all 0.5s ease-in-out;
   &:hover {
