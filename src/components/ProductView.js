@@ -7,20 +7,15 @@ import ProductVideo from "./ProductVideo";
 const ProductDiv = styled.div`
   position: relative;
   z-index: 3;
-  display: grid;
-  grid-template-areas:
-    "pic title"
-    "pic price"
-    "pic order"
-    "update video"
-    "availability delete";
+  display: flex;
+
   @media (max-width: 768px) {
     display: flex;
     flex-direction: column;
     align-items: center;
+    just0fy-content: center;
   }
-  grid-template-columns: 2fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr;
+
   margin: 20px auto 20px auto;
   padding: 40px;
   border: none;
@@ -32,19 +27,12 @@ const ProductDiv = styled.div`
 `;
 
 const ImageDiv = styled.div`
-  grid-area: pic;
   width: 200px;
-  height: 100%;
+  height: auto;
   transition: all 0.5s ease-in-out;
   &:hover {
     transform: scale(1.2);
   }
-`;
-const TitleDiv = styled.div`
-  grid-area: title;
-`;
-const PriceDiv = styled.div`
-  grid-area: price;
 `;
 
 function ProductView({
@@ -169,84 +157,105 @@ function ProductView({
         />
       )}
       <ProductDiv>
-        <ImageDiv>
-          {img_url && (
-            <img
-              src={img_url}
-              alt={title}
-              className="product-img"
-              loading="lazy"
-            />
+        <div
+          className="left-side"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-evenly",
+            alignItems: mobile ? "center" : "flex-start",
+            width: "50%",
+          }}
+        >
+          <ImageDiv>
+            {img_url && (
+              <img
+                src={img_url}
+                alt={title}
+                className="product-img"
+                loading="lazy"
+              />
+            )}
+          </ImageDiv>
+          {isUserAdmin && (
+            <Button
+              style={{
+                width: "150px",
+                marginLeft: mobile ? "0" : "2rem",
+              }}
+              onClick={() => {
+                toggle("modal");
+                setDisplay("update");
+              }}
+            >
+              Update Product
+            </Button>
           )}
-        </ImageDiv>
-        <TitleDiv>
-          <p>
-            <strong>{title}</strong>
-          </p>
-        </TitleDiv>
-        <PriceDiv>
-          <strong>Price: ${new Intl.NumberFormat().format(price)}</strong>
-        </PriceDiv>
-        <Button
-          className={
-            available ? "add-to-order-btn" : "add-to-order-btn out-of-stock"
-          }
-          style={{ gridArea: "order", width: mobile ? "130px" : "100px" }}
-          onClick={() => {
-            toggle("modal");
-            setDisplay("order");
-          }}
-          disabled={!available}
-        >
-          {available ? "Add to cart" : "Out of Stock"}
-        </Button>
-        <Button
-          style={{ gridArea: "video" }}
-          onClick={() => {
-            showCloseButton();
-            setMountVideo(!mountVideo);
+          {isUserAdmin && (
+            <Button
+              style={{
+                width: "150px",
+                marginLeft: mobile ? "0" : "2rem",
+              }}
+              onClick={() => handleAvailability()}
+            >
+              Update Availability
+            </Button>
+          )}
+        </div>
+        <div
+          className="right-side"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "50%",
           }}
         >
-          Video <i className="fab fa-youtube"></i>
-        </Button>
-        {isUserAdmin && (
+          <div className="product-title">
+            <p style={{ textAlign: "center" }}>
+              <strong>{title}</strong>
+            </p>
+          </div>
+          <div className="product-price">
+            <strong>Price: ${new Intl.NumberFormat().format(price)}</strong>
+          </div>
           <Button
-            style={{
-              gridArea: "update",
-              width: "150px",
-              marginLeft: mobile ? "0" : "2rem",
-            }}
+            className={
+              available ? "add-to-order-btn" : "add-to-order-btn out-of-stock"
+            }
+            style={{ width: mobile ? "130px" : "100px" }}
             onClick={() => {
               toggle("modal");
-              setDisplay("update");
+              setDisplay("order");
             }}
+            disabled={!available}
           >
-            Update Product
+            {available ? "Add to cart" : "Out of Stock"}
           </Button>
-        )}
-        {isUserAdmin && (
           <Button
-            style={{ gridArea: "delete" }}
+            style={{ gridArea: "video" }}
             onClick={() => {
-              toggle("modal");
-              setDisplay("delete");
+              showCloseButton();
+              setMountVideo(!mountVideo);
             }}
           >
-            Delete
+            Video <i className="fab fa-youtube"></i>
           </Button>
-        )}
-        {isUserAdmin && (
-          <Button
-            style={{
-              gridArea: "availability",
-              width: "150px",
-              marginLeft: mobile ? "0" : "2rem",
-            }}
-            onClick={() => handleAvailability()}
-          >
-            Update Availability
-          </Button>
-        )}
+
+          {isUserAdmin && (
+            <Button
+              style={{ gridArea: "delete" }}
+              onClick={() => {
+                toggle("modal");
+                setDisplay("delete");
+              }}
+            >
+              Delete
+            </Button>
+          )}
+        </div>
       </ProductDiv>
     </Fragment>
   );

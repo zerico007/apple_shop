@@ -18,7 +18,7 @@ const CartItemDiv = styled.div`
     align-items: center;
   }
   grid-template-columns: 1fr 2fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
   border: 1px solid lightgrey;
   margin-bottom: 1rem;
   border-radius: 0.4rem;

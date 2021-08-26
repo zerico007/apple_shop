@@ -42,7 +42,7 @@ const NavButton = styled.button`
 const NavButtonsDiv = styled.div`
   position: absolute;
   top: 72px;
-  transform: translateX(-0.85rem);
+  transform: translateX(-1.25rem);
   right: 100px;
   z-index: 10;
   background: white;
