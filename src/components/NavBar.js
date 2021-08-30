@@ -141,6 +141,34 @@ function NavBar({
     });
   }, []);
 
+  const ShoppingCart = () => {
+    return (
+      <Link to="/apple_shop/cart">
+        <div
+          className="cart"
+          style={{
+            marginTop: "1rem",
+            marginRight: mobile ? "3rem" : 0,
+            cursor: "pointer",
+            color: "white",
+            textAlign: "center",
+            display: "flex",
+            alignItems: "center",
+            float: "right",
+          }}
+        >
+          <IconButton aria-label="cart">
+            <StyledBadge badgeContent={cartCount} color="secondary">
+              <ShoppingCartIcon
+                style={{ color: "white", fontSize: "xx-large" }}
+              />
+            </StyledBadge>
+          </IconButton>
+        </div>
+      </Link>
+    );
+  };
+
   return (
     <>
       <Nav style={{ opacity: translucent ? "0.8" : "1" }}>
@@ -215,27 +243,7 @@ function NavBar({
                 </NavButtonsDiv>
               )}
             </div>
-            <Link to="/apple_shop/cart">
-              <div
-                className="cart"
-                style={{
-                  marginTop: "1rem",
-                  cursor: "pointer",
-                  color: "white",
-                  textAlign: "center",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <IconButton aria-label="cart">
-                  <StyledBadge badgeContent={cartCount} color="secondary">
-                    <ShoppingCartIcon
-                      style={{ color: "white", fontSize: "xx-large" }}
-                    />
-                  </StyledBadge>
-                </IconButton>
-              </div>
-            </Link>
+            <ShoppingCart />
           </div>
         )}
         {mobile && (
@@ -257,24 +265,7 @@ function NavBar({
                 <i className="fas fa-bars fa-2x"></i>
               )}
             </NavButton>
-            <Link to="/apple_shop/cart">
-              <div
-                className="cart"
-                style={{
-                  marginTop: "1rem",
-                  cursor: "pointer",
-                  color: "white",
-                  textAlign: "center",
-                  display: "flex",
-                  float: "right",
-                  marginRight: "3rem",
-                  alignItems: "center",
-                }}
-              >
-                <ShoppingCart size={32} style={{ marginRight: "0.4rem" }} />
-                Cart <sup>{` (${cartCount})`}</sup>
-              </div>
-            </Link>
+            <ShoppingCart />
           </>
         )}
         {showNav && (
