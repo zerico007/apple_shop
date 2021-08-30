@@ -3,6 +3,19 @@ import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
 import { ChevronDown, ShoppingCart } from "react-feather";
 import wave from "../assets/apple_shop_wave.svg";
+import Badge from "@material-ui/core/Badge";
+import { withStyles } from "@material-ui/core/styles";
+import IconButton from "@material-ui/core/IconButton";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+
+const StyledBadge = withStyles((theme) => ({
+  badge: {
+    right: -3,
+    top: 5,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: "0 4px",
+  },
+}))(Badge);
 
 const Nav = styled.nav`
   position: fixed;
@@ -214,8 +227,13 @@ function NavBar({
                   alignItems: "center",
                 }}
               >
-                <ShoppingCart style={{ marginRight: "0.4rem" }} />
-                Cart <sup>{` (${cartCount})`}</sup>
+                <IconButton aria-label="cart">
+                  <StyledBadge badgeContent={cartCount} color="secondary">
+                    <ShoppingCartIcon
+                      style={{ color: "white", fontSize: "xx-large" }}
+                    />
+                  </StyledBadge>
+                </IconButton>
               </div>
             </Link>
           </div>

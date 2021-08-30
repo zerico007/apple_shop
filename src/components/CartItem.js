@@ -31,17 +31,17 @@ const AmountSelect = styled.select`
   background: lightgrey;
   border-radius: 0.4rem;
   padding-left: 0.5rem;
-  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   cursor: pointer;
-  color: #f4f3ea;
-  background-color: #333d51;
+  color: #212a31;
+  border: none;
+  outline: none;
+  background-color: #ffcc00;
   transition: all 0.3s;
   outline: none;
   &:hover {
-    background-color: #d3ac2b;
-    color: #212a31;
+    background-color: #e5b700;
     transform: scale(1.1);
-    border: solid 1px #333d51;
   }
 `;
 

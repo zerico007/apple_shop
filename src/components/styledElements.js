@@ -33,14 +33,14 @@ const Button = styled.button`
   padding: 5px;
   margin-top: 10px;
   margin-bottom: 15px;
-  color: #f4f3ea;
-  background-color: #333d51;
+  color: #333d51;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  background-color: #ffcc00;
   transition: all 0.3s;
   &:hover {
-    background-color: #e6e600;
+    background-color: #e5b700;
     color: #212a31;
     transform: scale(1.1);
-    border: solid 1px #333d51;
   }
   outline: none;
   cursor: pointer;
