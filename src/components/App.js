@@ -88,10 +88,8 @@ function App() {
       .get(url)
       .then((response) => {
         if (response.data.orders) {
-          // setOrders(response.data.orders.reverse());
           dispatch(getOrdersSuccess(response.data.orders.reverse()));
         } else {
-          // setOrders([]);
           dispatch(getOrdersSuccess([]));
         }
       })
@@ -105,7 +103,6 @@ function App() {
     shopApiInstance
       .get("/products")
       .then((response) => {
-        // setProducts(response.data.products.reverse());
         dispatch(getProductsSuccess(response.data.products.reverse()));
       })
       .catch((err) => {
@@ -117,7 +114,6 @@ function App() {
   const getUser = (token) => {
     const user = jwt_decode(token);
     const { username, email, role, password, userId } = user;
-    // setUser({ username, email, role, password, userId });
     const loggedInUser = { username, email, role, password, userId, token };
     dispatch(loginSuccess(loggedInUser));
   };
@@ -129,16 +125,12 @@ function App() {
     dispatch(getOrdersRequest());
     dispatch(getProductsRequest());
     dispatch(getCartRequest());
-    //console.log(window.env.EXPOSED_API_URL)
     shopApiInstance
       .post("/users/signin", params)
       .then(async (response) => {
         e.target.reset();
         setProgress(100);
-        //await setToken(response.data.token);
-        // await sessionStorage.setItem("token", response.data.token);
         await setBearerToken(response.data.token);
-        // await setAuthenticated(true);
         await getUser(response.data.token);
         getProducts();
         getCart();
