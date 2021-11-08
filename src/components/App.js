@@ -67,7 +67,7 @@ function App() {
 
   useEffect(() => {
     window.addEventListener("load", () => {
-      setBearerToken(sessionStorage.token || "");
+      setBearerToken(user.token || "");
     });
     window.addEventListener("resize", () =>
       window.innerWidth < 768 ? setMobile(true) : setMobile(false)
