@@ -40,15 +40,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 function App() {
-  // const [products, setProducts] = usePersistedState("products", []);
-  // const [cart, setCart] = usePersistedState("cart", {});
-  // //const [ token, setToken ] = usePersistedState('token', '');
-  // const [user, setUser] = usePersistedState("user", {});
-  // const [authenticated, setAuthenticated] = usePersistedState(
-  //   "authenticated",
-  //   false
-  // );
-  // const [orders, setOrders] = usePersistedState("orders", []);
   const [mobile, setMobile] = usePersistedState("mobile", false);
   const [progress, setProgress] = usePersistedState("progress", 0);
   const [cartCount, setCartCount] = useState(0);
@@ -83,7 +74,6 @@ function App() {
     shopApiInstance
       .get("/cart")
       .then((response) => {
-        console.log(response.data);
         dispatch(getCartSuccess(response.data));
       })
       .catch((err) => {
@@ -339,14 +329,11 @@ function App() {
   };
 
   const logoutUser = () => {
-    //setToken('');
     setBearerToken("");
-    // setAuthenticated(false);
-    // setProducts([]);
-    dispatch(logout());
-    sessionStorage.clear();
     toast.dark("Logged out.", toastConfig);
     history.push("/apple_shop");
+    dispatch(logout());
+    sessionStorage.clear();
   };
 
   return (

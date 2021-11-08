@@ -97,14 +97,7 @@ const MobileNavButtonsDiv = styled.div`
   height: 100vh;
 `;
 
-function NavBar({
-  logout,
-  getOrders,
-  getAdminOrders,
-  user,
-  mobile,
-  cartCount,
-}) {
+function NavBar({ logout, getOrders, user, mobile, cartCount }) {
   const logoStyle = {
     float: "left",
     marginLeft: "20px",
@@ -135,10 +128,19 @@ function NavBar({
 
   const showNavDropDown = !mobile && showNavOptions;
 
+  const handleTranslucentOnScroll = () => {
+    if (window.scrollY > 0) {
+      setTranslucent(true);
+    } else {
+      setTranslucent(false);
+    }
+  };
+
   useEffect(() => {
-    window.addEventListener("scroll", () => {
-      window.scrollY > 0 ? setTranslucent(true) : setTranslucent(false);
-    });
+    window.addEventListener("scroll", handleTranslucentOnScroll);
+    return () => {
+      window.removeEventListener("scroll", handleTranslucentOnScroll);
+    };
   }, []);
 
   const ShoppingCart = () => {
