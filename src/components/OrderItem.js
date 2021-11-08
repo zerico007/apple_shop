@@ -29,14 +29,14 @@ function OrderItem({
   image,
   title,
   productId,
-  updateCart,
+  addToCart,
   price,
   quantity,
   subtotal,
 }) {
   const handleBuyAgain = () => {
     const params = { product: productId, quantity: 1 };
-    updateCart(params);
+    addToCart(params);
   };
   return (
     <OrderItemDiv>

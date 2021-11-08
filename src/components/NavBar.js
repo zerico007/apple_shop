@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
-import { ChevronDown, ShoppingCart } from "react-feather";
+import { ChevronDown } from "react-feather";
 import wave from "../assets/apple_shop_wave.svg";
 import Badge from "@material-ui/core/Badge";
 import { withStyles } from "@material-ui/core/styles";
@@ -215,7 +215,7 @@ function NavBar({
                   <Link to="/apple_shop/orders">
                     <NavButton
                       onClick={() => {
-                        isUserAdmin ? getAdminOrders() : getOrders();
+                        getOrders(user.role);
                         setShowNavOptions(false);
                       }}
                     >
@@ -274,10 +274,7 @@ function NavBar({
               <NavButton mobileSite={true}>Home</NavButton>
             </Link>
             <Link to="/apple_shop/orders">
-              <NavButton
-                mobileSite={true}
-                onClick={isUserAdmin ? getAdminOrders : getOrders}
-              >
+              <NavButton mobileSite={true} onClick={() => getOrders(user.role)}>
                 {isUserAdmin ? "Orders" : "My Orders"}
               </NavButton>
             </Link>

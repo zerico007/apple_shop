@@ -21,7 +21,7 @@ function OrderView({
   total,
   orderId,
   user,
-  updateCart,
+  addToCart,
   orderItems,
   mobile,
 }) {
@@ -68,7 +68,7 @@ function OrderView({
           title={item.product}
           productId={item.productId}
           quantity={item.quantity}
-          updateCart={updateCart}
+          addToCart={addToCart}
           price={item.unitPrice}
           subtotal={item.total}
           key={i}

@@ -22,7 +22,7 @@ function Catalogue({
   updateProductAvailability,
   mobile,
   updateProduct,
-  updateCart,
+  addToCart,
 }) {
   const [search, setSearch] = useState("");
 
@@ -46,7 +46,7 @@ function Catalogue({
             available={product.available}
             updateProductAvailability={updateProductAvailability}
             updateProduct={updateProduct}
-            updateCart={updateCart}
+            addToCart={addToCart}
             user={user}
             deleteProduct={deleteProduct}
             mobile={mobile}
@@ -66,7 +66,13 @@ function Catalogue({
                 }
                 id={product.id}
                 videoURL={product.videoURL}
+                available={product.available}
+                updateProductAvailability={updateProductAvailability}
+                updateProduct={updateProduct}
+                addToCart={addToCart}
                 user={user}
+                deleteProduct={deleteProduct}
+                mobile={mobile}
                 key={i}
               />
             )

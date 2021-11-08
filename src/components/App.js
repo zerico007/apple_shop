@@ -16,20 +16,45 @@ import CreateProduct from "./CreateProduct";
 import PasswordUpdate from "./PasswordUpdate";
 import { usePersistedState } from "../utils";
 import { toastConfig } from "./styledElements";
+import {
+  login,
+  loginFailure,
+  loginSuccess,
+  logout,
+} from "../redux/resources/user";
+import {
+  getOrdersFailure,
+  getOrdersRequest,
+  getOrdersSuccess,
+} from "../redux/resources/orders";
+import {
+  getProductsFailure,
+  getProductsRequest,
+  getProductsSuccess,
+} from "../redux/resources/products";
+import {
+  getCartSuccess,
+  getCartRequest,
+  getCartFailure,
+} from "../redux/resources/cart";
+import { useDispatch, useSelector } from "react-redux";
 
 function App() {
-  const [products, setProducts] = usePersistedState("products", []);
-  const [cart, setCart] = usePersistedState("cart", {});
-  //const [ token, setToken ] = usePersistedState('token', '');
-  const [user, setUser] = usePersistedState("user", {});
-  const [authenticated, setAuthenticated] = usePersistedState(
-    "authenticated",
-    false
-  );
-  const [orders, setOrders] = usePersistedState("orders", []);
+  // const [products, setProducts] = usePersistedState("products", []);
+  // const [cart, setCart] = usePersistedState("cart", {});
+  // //const [ token, setToken ] = usePersistedState('token', '');
+  // const [user, setUser] = usePersistedState("user", {});
+  // const [authenticated, setAuthenticated] = usePersistedState(
+  //   "authenticated",
+  //   false
+  // );
+  // const [orders, setOrders] = usePersistedState("orders", []);
   const [mobile, setMobile] = usePersistedState("mobile", false);
   const [progress, setProgress] = usePersistedState("progress", 0);
   const [cartCount, setCartCount] = useState(0);
+
+  const dispatch = useDispatch();
+  const { user, orders, products, cart } = useSelector((state) => state);
 
   useEffect(() => {
     const count = cart.items
@@ -58,51 +83,62 @@ function App() {
     shopApiInstance
       .get("/cart")
       .then((response) => {
-        response.data.message ? setCart({}) : setCart(response.data);
+        console.log(response.data);
+        dispatch(getCartSuccess(response.data));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        dispatch(getCartFailure(err));
+      });
   };
 
-  const getAdminOrders = () => {
+  const getOrders = (role) => {
+    const url = role === "administrator" ? "/orders/admin" : "/orders";
     shopApiInstance
-      .get("/orders/admin")
+      .get(url)
       .then((response) => {
-        response.data.orders
-          ? setOrders(response.data.orders.reverse())
-          : setOrders([]);
+        if (response.data.orders) {
+          // setOrders(response.data.orders.reverse());
+          dispatch(getOrdersSuccess(response.data.orders.reverse()));
+        } else {
+          // setOrders([]);
+          dispatch(getOrdersSuccess([]));
+        }
       })
-      .catch((err) => console.log(err));
-  };
-
-  const getOrders = () => {
-    shopApiInstance
-      .get("/orders")
-      .then((response) => {
-        response.data.orders
-          ? setOrders(response.data.orders.reverse())
-          : setOrders([]);
-      })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        dispatch(getOrdersFailure(err));
+      });
   };
 
   const getProducts = () => {
     shopApiInstance
       .get("/products")
       .then((response) => {
-        setProducts(response.data.products.reverse());
+        // setProducts(response.data.products.reverse());
+        dispatch(getProductsSuccess(response.data.products.reverse()));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        dispatch(getProductsFailure(err));
+      });
   };
 
   const getUser = (token) => {
     const user = jwt_decode(token);
     const { username, email, role, password, userId } = user;
-    setUser({ username, email, role, password, userId });
+    // setUser({ username, email, role, password, userId });
+    const loggedInUser = { username, email, role, password, userId, token };
+    dispatch(loginSuccess(loggedInUser));
   };
 
   const handleLogin = (e, params) => {
     setProgress(40);
     e.preventDefault();
+    dispatch(login());
+    dispatch(getOrdersRequest());
+    dispatch(getProductsRequest());
+    dispatch(getCartRequest());
     //console.log(window.env.EXPOSED_API_URL)
     shopApiInstance
       .post("/users/signin", params)
@@ -110,13 +146,13 @@ function App() {
         e.target.reset();
         setProgress(100);
         //await setToken(response.data.token);
-        await sessionStorage.setItem("token", response.data.token);
+        // await sessionStorage.setItem("token", response.data.token);
         await setBearerToken(response.data.token);
-        await setAuthenticated(true);
+        // await setAuthenticated(true);
         await getUser(response.data.token);
         getProducts();
         getCart();
-        user.role === "administrator" ? getAdminOrders() : getOrders();
+        getOrders(user.role);
         toast.success("Successfully logged in!", toastConfig);
         history.push("/apple_shop/home");
       })
@@ -128,7 +164,8 @@ function App() {
             return "Email/Password combination incorrect. Try again.";
           if (err.message.includes("404")) return "User not found.";
         };
-        toast.error(error, toastConfig);
+        dispatch(loginFailure(error()));
+        toast.error(error(), toastConfig);
       });
   };
 
@@ -150,6 +187,7 @@ function App() {
   };
 
   const addProduct = (e, params) => {
+    dispatch(getProductsRequest());
     shopApiInstance
       .post("/products", params)
       .then((response) => {
@@ -159,12 +197,14 @@ function App() {
         history.push("/apple_shop/products");
       })
       .catch((err) => {
+        dispatch(getProductsFailure(err));
         toast.error(err.message, toastConfig);
       });
     e.target.reset();
   };
 
   const updateProduct = (e, id, params) => {
+    dispatch(getProductsRequest());
     shopApiInstance
       .put(`/products/${id}`, params)
       .then((response) => {
@@ -174,12 +214,14 @@ function App() {
         history.push("/apple_shop/products");
       })
       .catch((err) => {
+        dispatch(getProductsFailure(err));
         toast.error(err.message, toastConfig);
       });
     e.target.reset();
   };
 
   const deleteProduct = (id) => {
+    dispatch(getProductsRequest());
     const deleteParams = { productId: id };
     shopApiInstance
       .delete("/orders/delete", { data: deleteParams })
@@ -193,6 +235,7 @@ function App() {
         history.push("/apple_shop/products");
       })
       .catch((err) => {
+        dispatch(getProductsFailure(err));
         toast.error(err.message, toastConfig);
       });
   };
@@ -215,6 +258,7 @@ function App() {
   };
 
   const updateProductAvailability = (path) => {
+    dispatch(getProductsRequest());
     console.log(path);
     shopApiInstance
       .put(path)
@@ -225,11 +269,13 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
+        dispatch(getProductsFailure(err));
         toast.error(err.message, toastConfig);
       });
   };
 
-  const updateCart = (params) => {
+  const addToCart = (params) => {
+    dispatch(getCartRequest());
     shopApiInstance
       .post("/cart", params)
       .then((response) => {
@@ -239,11 +285,26 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
+        dispatch(getCartFailure(err));
         toast.error(err.message, toastConfig);
       });
   };
 
+  const updateCart = (params) => {
+    shopApiInstance
+      .put("/cart/update", params)
+      .then((response) => {
+        console.log("item in cart updated");
+        getCart();
+      })
+      .catch((err) => {
+        console.log("update Cart", err);
+        dispatch(getCartFailure(err));
+      });
+  };
+
   const removeFromCart = (params) => {
+    dispatch(getCartRequest());
     shopApiInstance
       .put("/cart/remove", params)
       .then((response) => {
@@ -253,30 +314,36 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
+        dispatch(getCartFailure(err));
         toast.error(err.message, toastConfig);
       });
   };
 
   const placeOrder = () => {
+    dispatch(getOrdersRequest());
+    dispatch(getCartRequest());
     shopApiInstance
       .post("/orders")
       .then((response) => {
         console.log(response.data);
         getCart();
-        user.role === "administrator" ? getAdminOrders() : getOrders();
+        getOrders(user.role);
         toast.success("Order placed successfully", toastConfig);
       })
       .catch((err) => {
         console.log(err);
+        dispatch(getOrdersFailure(err));
+        dispatch(getCartFailure(err));
         toast.error(err.message, toastConfig);
       });
   };
 
-  const logout = () => {
+  const logoutUser = () => {
     //setToken('');
     setBearerToken("");
-    setAuthenticated(false);
-    setProducts([]);
+    // setAuthenticated(false);
+    // setProducts([]);
+    dispatch(logout());
     sessionStorage.clear();
     toast.dark("Logged out.", toastConfig);
     history.push("/apple_shop");
@@ -290,12 +357,11 @@ function App() {
         onLoaderFinished={() => setProgress(0)}
       />
       <ToastContainer />
-      {authenticated && (
+      {user.user.isLoggedIn && (
         <NavBar
-          logout={logout}
+          logout={logoutUser}
           getOrders={getOrders}
-          getAdminOrders={getAdminOrders}
-          user={user}
+          user={user.user}
           mobile={mobile}
           cartCount={cartCount}
         />
@@ -318,9 +384,9 @@ function App() {
           render={(props) => (
             <Catalogue
               {...props}
-              products={products}
-              user={user}
-              updateCart={updateCart}
+              products={products.products}
+              user={user.user}
+              addToCart={addToCart}
               deleteProduct={deleteProduct}
               updateProductAvailability={updateProductAvailability}
               updateProduct={updateProduct}
@@ -333,9 +399,9 @@ function App() {
           render={(props) => (
             <Orders
               {...props}
-              orders={orders}
+              orders={orders.orders}
               mobile={mobile}
-              updateCart={updateCart}
+              addToCart={addToCart}
             />
           )}
         />
@@ -364,7 +430,7 @@ function App() {
           render={(props) => (
             <PasswordUpdate
               {...props}
-              user={user}
+              user={user.user}
               updatePassword={updatePassword}
             />
           )}

@@ -8,12 +8,12 @@ function Modal({
   toggle,
   display,
   deleteProduct,
-  updateCart,
+  addToCart,
   UpdateProductModal,
 }) {
   const quantityRef = useRef();
 
-  const addToCart = (e) => {
+  const handleAddToCart = (e) => {
     e.preventDefault();
     toggle("modal");
     const quantity = quantityRef.current.value;
@@ -21,7 +21,7 @@ function Modal({
       return toast.error("Please enter a quantity", toastConfig);
     console.log(productId, quantity);
     const params = { product: productId, quantity };
-    updateCart(params);
+    addToCart(params);
     e.target.reset();
   };
 
@@ -33,7 +33,7 @@ function Modal({
           {display === "order" && (
             <Fragment>
               <h3 className="order-modal">How many would you like to add?</h3>
-              <form onSubmit={addToCart}>
+              <form onSubmit={handleAddToCart}>
                 <Input
                   type="number"
                   name="quantity"

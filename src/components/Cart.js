@@ -43,7 +43,7 @@ const Cart = ({
         <div className="cart-total">
           <strong>
             {`Subtotal (${count} items): `}
-            {`${cart.Total || "$0.00"}`}
+            {`${cart.total || "$0.00"}`}
           </strong>
         </div>
         {cart.items && <Button onClick={placeOrder}>Place Order</Button>}

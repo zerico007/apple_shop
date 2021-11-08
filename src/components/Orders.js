@@ -2,7 +2,7 @@ import React from "react";
 import styled from "@emotion/styled";
 import OrderView from "./OrderView";
 
-function Orders({ orders, mobile, updateCart }) {
+function Orders({ orders, mobile, addToCart }) {
   const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -27,7 +27,7 @@ function Orders({ orders, mobile, updateCart }) {
           date={order.order.dateCreated}
           orderId={order.order.id}
           orderItems={order.order.items}
-          updateCart={updateCart}
+          addToCart={addToCart}
           mobile={mobile}
           key={i}
         />

@@ -45,7 +45,7 @@ function ProductView({
   updateProductAvailability,
   mobile,
   updateProduct,
-  updateCart,
+  addToCart,
 }) {
   const [closeButton, setCloseButton] = useState(false);
   const [mountVideo, setMountVideo] = useState(false);
@@ -140,7 +140,7 @@ function ProductView({
         display={display}
         deleteProduct={deleteProduct}
         UpdateProductModal={UpdateProductModal}
-        updateCart={updateCart}
+        addToCart={addToCart}
       />
       {mountVideo && (
         <ProductVideo
