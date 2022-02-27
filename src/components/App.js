@@ -63,261 +63,246 @@ function App() {
     window.addEventListener("resize", () =>
       window.innerWidth < 768 ? setMobile(true) : setMobile(false)
     );
-    //window.addEventListener('unload', () => logout());
   });
 
   useEffect(() => {
     window.innerWidth < 768 ? setMobile(true) : setMobile(false);
   }, [setMobile]);
 
-  const getCart = () => {
-    shopApiInstance
-      .get("/cart")
-      .then((response) => {
-        dispatch(getCartSuccess(response.data));
-      })
-      .catch((err) => {
-        console.log(err);
-        dispatch(getCartFailure(err));
-      });
+  const getCart = async () => {
+    try {
+      const response = await shopApiInstance.get("/cart");
+      dispatch(getCartSuccess(response.data));
+    } catch (error) {
+      dispatch(getCartFailure(error));
+    }
   };
 
-  const getOrders = (role) => {
+  const getOrders = async (role) => {
     const url = role === "administrator" ? "/orders/admin" : "/orders";
-    shopApiInstance
-      .get(url)
-      .then((response) => {
-        if (response.data.orders) {
-          dispatch(getOrdersSuccess(response.data.orders.reverse()));
-        } else {
-          dispatch(getOrdersSuccess([]));
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        dispatch(getOrdersFailure(err));
-      });
+    try {
+      const response = await shopApiInstance.get(url);
+      if (response.data.orders) {
+        dispatch(getOrdersSuccess(response.data.orders.reverse()));
+      } else {
+        dispatch(getOrdersSuccess([]));
+      }
+    } catch (error) {
+      dispatch(getOrdersFailure(error));
+    }
   };
 
-  const getProducts = () => {
-    shopApiInstance
-      .get("/products")
-      .then((response) => {
-        dispatch(getProductsSuccess(response.data.products.reverse()));
-      })
-      .catch((err) => {
-        console.log(err);
-        dispatch(getProductsFailure(err));
-      });
+  const getProducts = async () => {
+    try {
+      const response = await shopApiInstance.get("/products");
+      dispatch(getProductsSuccess(response.data.products.reverse()));
+    } catch (error) {
+      dispatch(getProductsFailure(error));
+    }
   };
 
   const getUser = (token) => {
-    const user = jwt_decode(token);
-    const { username, email, role, password, userId } = user;
+    const decodedUser = jwt_decode(token);
+    const { username, email, role, password, userId } = decodedUser;
     const loggedInUser = { username, email, role, password, userId, token };
     dispatch(loginSuccess(loggedInUser));
   };
 
-  const handleLogin = (e, params) => {
+  const handleLogin = async (e, params) => {
     setProgress(40);
     e.preventDefault();
     dispatch(login());
     dispatch(getOrdersRequest());
     dispatch(getProductsRequest());
     dispatch(getCartRequest());
-    shopApiInstance
-      .post("/users/signin", params)
-      .then(async (response) => {
-        e.target.reset();
-        setProgress(100);
-        await setBearerToken(response.data.token);
-        await getUser(response.data.token);
-        getProducts();
-        getCart();
-        getOrders(user.role);
-        toast.success("Successfully logged in!", toastConfig);
-        history.push("/apple_shop/home");
-      })
-      .catch((err) => {
-        setProgress(100);
-        console.log(err);
-        const error = () => {
-          if (err.message.includes("401"))
-            return "Email/Password combination incorrect. Try again.";
-          if (err.message.includes("404")) return "User not found.";
-        };
-        dispatch(loginFailure(error()));
-        toast.error(error(), toastConfig);
-      });
+    try {
+      const response = await shopApiInstance.post("/users/signin", params);
+      e.target.reset();
+      setProgress(100);
+      setBearerToken(response.data.token);
+      getUser(response.data.token);
+      getCart();
+      getOrders(user.role);
+      getProducts();
+      toast.success("Successfully logged in!", toastConfig);
+      history.push("/apple_shop/home");
+    } catch (err) {
+      setProgress(100);
+      console.log(err);
+      const error = () => {
+        if (err.message.includes("401"))
+          return "Email/Password combination incorrect. Try again.";
+        if (err.message.includes("404")) return "User not found.";
+      };
+      dispatch(loginFailure(error()));
+      toast.error(error(), toastConfig);
+    }
   };
 
-  const handleRegister = (e, params) => {
+  const handleRegister = async (e, params) => {
     setProgress(40);
     e.preventDefault();
-    shopApiInstance
-      .post("/users/signup", params)
-      .then((response) => {
-        setProgress(100);
-        console.log(response.data);
-        toast.success("Account successfully created. Login here.", toastConfig);
-        history.push("/apple_shop");
-      })
-      .catch((err) => {
-        setProgress(100);
-        toast.error(err.message, toastConfig);
-      });
-  };
-
-  const addProduct = (e, params) => {
-    dispatch(getProductsRequest());
-    shopApiInstance
-      .post("/products", params)
-      .then((response) => {
-        console.log(response.data);
+    try {
+      const response = await shopApiInstance.post("/users/signup", params);
+      if (response.data) {
         toast.success("Product successfully created", toastConfig);
         getProducts();
         history.push("/apple_shop/products");
-      })
-      .catch((err) => {
-        dispatch(getProductsFailure(err));
-        toast.error(err.message, toastConfig);
-      });
-    e.target.reset();
+      }
+    } catch (err) {
+      setProgress(100);
+      toast.error(err.message, toastConfig);
+    }
   };
 
-  const updateProduct = (e, id, params) => {
+  const addProduct = async (e, params) => {
     dispatch(getProductsRequest());
-    shopApiInstance
-      .put(`/products/${id}`, params)
-      .then((response) => {
-        console.log(response.data);
+    try {
+      const response = await shopApiInstance.post("/products", params);
+      if (response.data) {
+        toast.success("Product successfully created", toastConfig);
+        getProducts();
+        history.push("/apple_shop/products");
+      }
+    } catch (err) {
+      dispatch(getProductsFailure(err));
+      toast.error(err.message, toastConfig);
+    } finally {
+      e.target.reset();
+    }
+  };
+
+  const updateProduct = async (e, id, params) => {
+    dispatch(getProductsRequest());
+    try {
+      const response = await shopApiInstance.put(`/products/${id}`, params);
+      if (response.data) {
         toast.success("Product successfully updated", toastConfig);
         getProducts();
         history.push("/apple_shop/products");
-      })
-      .catch((err) => {
-        dispatch(getProductsFailure(err));
-        toast.error(err.message, toastConfig);
-      });
-    e.target.reset();
+      }
+    } catch (err) {
+      dispatch(getProductsFailure(err));
+      toast.error(err.message, toastConfig);
+    } finally {
+      e.target.reset();
+    }
   };
 
-  const deleteProduct = (id) => {
+  const deleteProduct = async (id) => {
     dispatch(getProductsRequest());
     const deleteParams = { productId: id };
-    shopApiInstance
-      .delete("/orders/delete", { data: deleteParams })
-      .then((result) => console.log(result));
-    shopApiInstance
-      .delete(`/products/${id}`)
-      .then((response) => {
-        console.log(response.data);
-        toast.success("Products successfully deleted", toastConfig);
+    try {
+      const response = await shopApiInstance.delete("/orders/delete", {
+        data: deleteParams,
+      });
+      if (response.data) {
+        const productDeleteResponse = await shopApiInstance.delete(
+          `/products/${id}`
+        );
+        if (productDeleteResponse.data) {
+          toast.success("Product successfully deleted", toastConfig);
+          getProducts();
+          history.push("/apple_shop/products");
+        }
+      }
+    } catch (err) {
+      dispatch(getProductsFailure(err));
+      toast.error(err.message, toastConfig);
+    }
+  };
+
+  const updatePassword = async (e, params) => {
+    try {
+      const response = await shopApiInstance.put(
+        `/users/${user.userId}`,
+        params
+      );
+      if (response.data) {
+        toast.success("Password successfully updated", toastConfig);
+        history.push("/apple_shop/home");
+      }
+    } catch (err) {
+      const error = err.message.includes("401")
+        ? "Incorrect password. Try again."
+        : err.message;
+      toast.error(error, toastConfig);
+    } finally {
+      e.target.reset();
+    }
+  };
+
+  const updateProductAvailability = async (path) => {
+    dispatch(getProductsRequest());
+    try {
+      const response = await shopApiInstance.put(path);
+      if (response.data) {
+        toast.success("Product availability successfully updated", toastConfig);
         getProducts();
         history.push("/apple_shop/products");
-      })
-      .catch((err) => {
-        dispatch(getProductsFailure(err));
-        toast.error(err.message, toastConfig);
-      });
+      }
+    } catch (err) {
+      dispatch(getProductsFailure(err));
+      toast.error(err.message, toastConfig);
+    }
   };
 
-  const updatePassword = (e, params) => {
-    shopApiInstance
-      .put(`/users/${user.userId}`, params)
-      .then((response) => {
-        console.log(response.data);
-        toast.success("Password updated successfully!", toastConfig);
-        history.push("/apple_shop/home");
-      })
-      .catch((err) => {
-        const error = err.message.includes("401")
-          ? "Incorrect password. Try again."
-          : err.message;
-        toast.error(error, toastConfig);
-      });
-    e.target.reset();
-  };
-
-  const updateProductAvailability = (path) => {
-    dispatch(getProductsRequest());
-    console.log(path);
-    shopApiInstance
-      .put(path)
-      .then((response) => {
-        console.log(response.data);
-        getProducts();
-        toast.success("Order updated successfully", toastConfig);
-      })
-      .catch((err) => {
-        console.log(err);
-        dispatch(getProductsFailure(err));
-        toast.error(err.message, toastConfig);
-      });
-  };
-
-  const addToCart = (params) => {
+  const addToCart = async (params) => {
     dispatch(getCartRequest());
-    shopApiInstance
-      .post("/cart", params)
-      .then((response) => {
-        console.log(response.data);
+    try {
+      const response = await shopApiInstance.post("/cart", params);
+      if (response.data) {
+        toast.success("Product successfully added to cart", toastConfig);
         getCart();
-        toast.success("Cart updated successfully", toastConfig);
-      })
-      .catch((err) => {
-        console.log(err);
-        dispatch(getCartFailure(err));
-        toast.error(err.message, toastConfig);
-      });
+      }
+    } catch (err) {
+      dispatch(getCartFailure(err));
+      toast.error(err.message, toastConfig);
+    }
   };
 
-  const updateCart = (params) => {
-    shopApiInstance
-      .put("/cart/update", params)
-      .then((response) => {
-        console.log("item in cart updated");
+  const updateCart = async (params) => {
+    try {
+      const response = await shopApiInstance.put("/cart/update", params);
+      if (response.data) {
+        toast.success("Cart successfully updated", toastConfig);
         getCart();
-      })
-      .catch((err) => {
-        console.log("update Cart", err);
-        dispatch(getCartFailure(err));
-      });
+      }
+    } catch (err) {
+      dispatch(getCartFailure(err));
+      toast.error(err.message, toastConfig);
+    }
   };
 
-  const removeFromCart = (params) => {
+  const removeFromCart = async (params) => {
     dispatch(getCartRequest());
-    shopApiInstance
-      .put("/cart/remove", params)
-      .then((response) => {
-        console.log(response.data);
+    try {
+      const response = await shopApiInstance.put("/cart/remove", params);
+      if (response.data) {
+        toast.success("Product successfully removed from cart", toastConfig);
         getCart();
-        toast.success("Cart updated successfully", toastConfig);
-      })
-      .catch((err) => {
-        console.log(err);
-        dispatch(getCartFailure(err));
-        toast.error(err.message, toastConfig);
-      });
+      }
+    } catch (err) {
+      dispatch(getCartFailure(err));
+      toast.error(err.message, toastConfig);
+    }
   };
 
-  const placeOrder = () => {
+  const placeOrder = async () => {
     dispatch(getOrdersRequest());
     dispatch(getCartRequest());
-    shopApiInstance
-      .post("/orders")
-      .then((response) => {
-        console.log(response.data);
-        getCart();
+    try {
+      const response = await shopApiInstance.post("/orders");
+      if (response.data) {
+        toast.success("Order successfully placed", toastConfig);
         getOrders(user.role);
-        toast.success("Order placed successfully", toastConfig);
-      })
-      .catch((err) => {
-        console.log(err);
-        dispatch(getOrdersFailure(err));
-        dispatch(getCartFailure(err));
-        toast.error(err.message, toastConfig);
-      });
+        getCart();
+      }
+    } catch (err) {
+      dispatch(getCartFailure(err));
+      dispatch(getOrdersFailure(err));
+      toast.error(err.message, toastConfig);
+    }
   };
 
   const logoutUser = () => {

@@ -24,6 +24,7 @@ const cartSlice = createSlice({
       if (payload.message) {
         state.total = "";
         state.items = [];
+        return;
       }
       state.total = payload.Total;
       state.items = payload.items;
