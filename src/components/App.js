@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Route, Switch, useHistory } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import LoadingBar from "react-top-loading-bar";
 import { setBearerToken, shopApiInstance } from "../network";
@@ -54,7 +54,7 @@ function App() {
     setCartCount(count);
   }, [cart]);
 
-  let history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.addEventListener("load", () => {
@@ -125,7 +125,7 @@ function App() {
       getOrders(user.role);
       getProducts();
       toast.success("Successfully logged in!", toastConfig);
-      history.push("/apple_shop/home");
+      navigate("/apple_shop/home");
     } catch (err) {
       setProgress(100);
       console.log(err);
@@ -147,7 +147,7 @@ function App() {
       if (response.data) {
         toast.success("Product successfully created", toastConfig);
         getProducts();
-        history.push("/apple_shop/products");
+        navigate("/apple_shop/products");
       }
     } catch (err) {
       setProgress(100);
@@ -162,7 +162,7 @@ function App() {
       if (response.data) {
         toast.success("Product successfully created", toastConfig);
         getProducts();
-        history.push("/apple_shop/products");
+        navigate("/apple_shop/products");
       }
     } catch (err) {
       dispatch(getProductsFailure(err));
@@ -179,7 +179,7 @@ function App() {
       if (response.data) {
         toast.success("Product successfully updated", toastConfig);
         getProducts();
-        history.push("/apple_shop/products");
+        navigate("/apple_shop/products");
       }
     } catch (err) {
       dispatch(getProductsFailure(err));
@@ -203,7 +203,7 @@ function App() {
         if (productDeleteResponse.data) {
           toast.success("Product successfully deleted", toastConfig);
           getProducts();
-          history.push("/apple_shop/products");
+          navigate("/apple_shop/products");
         }
       }
     } catch (err) {
@@ -220,7 +220,7 @@ function App() {
       );
       if (response.data) {
         toast.success("Password successfully updated", toastConfig);
-        history.push("/apple_shop/home");
+        navigate("/apple_shop/home");
       }
     } catch (err) {
       const error = err.message.includes("401")
@@ -239,7 +239,7 @@ function App() {
       if (response.data) {
         toast.success("Product availability successfully updated", toastConfig);
         getProducts();
-        history.push("/apple_shop/products");
+        navigate("/apple_shop/products");
       }
     } catch (err) {
       dispatch(getProductsFailure(err));
@@ -308,7 +308,7 @@ function App() {
   const logoutUser = () => {
     setBearerToken("");
     toast.dark("Logged out.", toastConfig);
-    history.push("/apple_shop");
+    navigate("/apple_shop");
     dispatch(logout());
     sessionStorage.clear();
   };
@@ -330,24 +330,21 @@ function App() {
           cartCount={cartCount}
         />
       )}
-      <Switch>
+      <Routes>
         <Route
           exact
           path="/apple_shop"
-          render={(props) => <Login {...props} handleLogin={handleLogin} />}
+          element={<Login handleLogin={handleLogin} />}
         />
-        <Route path="/apple_shop/home" component={Home} />
+        <Route path="/apple_shop/home" element={<Home />} />
         <Route
           path="/apple_shop/register"
-          render={(props) => (
-            <Register {...props} handleRegister={handleRegister} />
-          )}
+          element={<Register handleRegister={handleRegister} />}
         />
         <Route
           path="/apple_shop/products"
-          render={(props) => (
+          element={
             <Catalogue
-              {...props}
               products={products.products}
               user={user.user}
               addToCart={addToCart}
@@ -356,24 +353,22 @@ function App() {
               updateProduct={updateProduct}
               mobile={mobile}
             />
-          )}
+          }
         />
         <Route
           path="/apple_shop/orders"
-          render={(props) => (
+          element={
             <Orders
-              {...props}
               orders={orders.orders}
               mobile={mobile}
               addToCart={addToCart}
             />
-          )}
+          }
         />
         <Route
           path="/apple_shop/cart"
-          render={(props) => (
+          element={
             <Cart
-              {...props}
               updateCart={updateCart}
               cart={cart}
               count={cartCount}
@@ -381,25 +376,19 @@ function App() {
               placeOrder={placeOrder}
               mobile={mobile}
             />
-          )}
+          }
         />
         <Route
           path="/apple_shop/create-product"
-          render={(props) => (
-            <CreateProduct {...props} addProduct={addProduct} />
-          )}
+          element={<CreateProduct addProduct={addProduct} />}
         />
         <Route
           path="/apple_shop/password"
-          render={(props) => (
-            <PasswordUpdate
-              {...props}
-              user={user.user}
-              updatePassword={updatePassword}
-            />
-          )}
+          element={
+            <PasswordUpdate user={user.user} updatePassword={updatePassword} />
+          }
         />
-      </Switch>
+      </Routes>
     </Fragment>
   );
 }
