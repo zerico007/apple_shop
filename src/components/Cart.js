@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "@emotion/styled";
+import styled from "styled-components";
 import CartItem from "./CartItem";
 import { Button } from "./styledElements";
 
@@ -46,7 +46,9 @@ const Cart = ({
             {`${cart.total || "$0.00"}`}
           </strong>
         </div>
-        {cart.items && <Button onClick={placeOrder}>Place Order</Button>}
+        {cart.items.length > 0 && (
+          <Button onClick={placeOrder}>Place Order</Button>
+        )}
       </div>
       {cart.items?.map((item, i) => (
         <CartItem

@@ -10,7 +10,7 @@ import {
   Check,
 } from "./styledElements";
 import { toastConfig } from "./styledElements";
-import styled from "@emotion/styled";
+import styled from "styled-components";
 import { CheckSquare, XCircle } from "react-feather";
 
 const LoginButton = styled.button`

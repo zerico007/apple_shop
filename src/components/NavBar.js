@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import styled from "@emotion/styled";
+import styled, { keyframes } from "styled-components";
 import { ChevronDown } from "react-feather";
 import wave from "../assets/apple_shop_wave.svg";
 import Badge from "@material-ui/core/Badge";
@@ -52,22 +52,56 @@ const NavButton = styled.button`
   text-align: center;
 `;
 
+const menuFadeDown = keyframes`
+  from {
+    opacity: 0;
+    transform: scaleY(0);
+    visibility: hidden;
+  } to {
+    opacity: 1;
+    transform: scaleY(1);
+    visibility: visible;
+  }
+`;
+
 const NavButtonsDiv = styled.div`
   position: absolute;
-  top: 72px;
-  transform: translateX(-1.25rem);
-  right: 100px;
+  top: 80px;
+  transform-origin: 0% 0%;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border: 2px solid #333d51;
+  animation: ${menuFadeDown} 0.5s ease-in-out;
+  right: 142px;
   z-index: 10;
   background: white;
-  width: 18rem;
+  width: 12rem;
   height: auto;
-  padding: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
   border-radius: 0.3rem;
+  > a {
+    width: 100%;
+    > button {
+      width: 100%;
+      margin: 0;
+      :hover {
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px,
+          rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
+      }
+    }
+  }
+  > button {
+    margin: 0;
+    margin-bottom: 10px;
+    width: 100%;
+    :hover {
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px,
+        rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
+    }
+  }
   &:after {
     content: "";
     position: absolute;
@@ -76,7 +110,7 @@ const NavButtonsDiv = styled.div`
     margin-left: -10px;
     border-width: 10px;
     border-style: solid;
-    border-color: transparent transparent white transparent;
+    border-color: transparent transparent #fff transparent;
   }
 `;
 

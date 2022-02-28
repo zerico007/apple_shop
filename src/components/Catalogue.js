@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled from "@emotion/styled";
+import styled from "styled-components";
 import ProductView from "./ProductView";
 import SearchBar from "./SearchBar";
 import { IMAGES_URL } from "../constants";

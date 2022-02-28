@@ -39,7 +39,7 @@ shopApiInstance.interceptors.response.use(
 
 const setBearerToken = (token) => {
   shopApiInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  console.log(`Set bearer token, ${token}`);
+  console.log(`Set bearer token`);
 };
 
 export { shopApiInstance, setBearerToken };

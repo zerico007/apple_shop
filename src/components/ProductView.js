@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useRef } from "react";
-import styled from "@emotion/styled";
+import styled from "styled-components";
 import { Button, FormDiv, Input } from "./styledElements";
 import Modal from "./Modal";
 import ProductVideo from "./ProductVideo";

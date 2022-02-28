@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled from "@emotion/styled";
+import styled from "styled-components";
 import { IMAGES_URL } from "../constants";
 import { Button } from "./styledElements";
 

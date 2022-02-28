@@ -2,41 +2,43 @@ import React, { Fragment, useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import LoadingBar from "react-top-loading-bar";
-import { setBearerToken, shopApiInstance } from "../network";
+import { setBearerToken, shopApiInstance } from "./network";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Login from "./Login";
-import Register from "./Register";
-import Catalogue from "./Catalogue";
-import NavBar from "./NavBar";
-import Orders from "./Orders";
-import Home from "./Home";
-import Cart from "./Cart";
-import CreateProduct from "./CreateProduct";
-import PasswordUpdate from "./PasswordUpdate";
-import { usePersistedState } from "../utils";
-import { toastConfig } from "./styledElements";
+import {
+  Login,
+  Register,
+  Catalogue,
+  NavBar,
+  Orders,
+  Home,
+  Cart,
+  CreateProduct,
+  PasswordUpdate,
+  toastConfig,
+} from "./components";
+import { usePersistedState } from "./utils";
 import {
   login,
   loginFailure,
   loginSuccess,
   logout,
-} from "../redux/resources/user";
+} from "./redux/resources/user";
 import {
   getOrdersFailure,
   getOrdersRequest,
   getOrdersSuccess,
-} from "../redux/resources/orders";
+} from "./redux/resources/orders";
 import {
   getProductsFailure,
   getProductsRequest,
   getProductsSuccess,
-} from "../redux/resources/products";
+} from "./redux/resources/products";
 import {
   getCartSuccess,
   getCartRequest,
   getCartFailure,
-} from "../redux/resources/cart";
+} from "./redux/resources/cart";
 import { useDispatch, useSelector } from "react-redux";
 
 function App() {
@@ -58,7 +60,7 @@ function App() {
 
   useEffect(() => {
     window.addEventListener("load", () => {
-      setBearerToken(user.token || "");
+      setBearerToken(user.token ?? "");
     });
     window.addEventListener("resize", () =>
       window.innerWidth < 768 ? setMobile(true) : setMobile(false)
