@@ -2,17 +2,17 @@ import React from "react";
 import styled from "styled-components";
 import { Input } from "./styledElements";
 
-function SearchBar({ search, updateSearch }) {
-  const SearchDiv = styled.div`
-    width: 75vw;
-    height: 2rem;
-    top: 150px;
-    margin-right: auto;
-    margin-left: auto;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  `;
+const SearchDiv = styled.div`
+  width: 75vw;
+  height: 2rem;
+  top: 150px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+`;
 
+function SearchBar({ search, updateSearch }) {
   return (
     <SearchDiv key={"searching"}>
       <Input

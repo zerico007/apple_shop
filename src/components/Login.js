@@ -3,26 +3,26 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { FormDiv, Button, Input } from "./styledElements";
 
-function Login({ handleLogin }) {
-  const RegisterButton = styled.button`
-    border: none;
-    border-bottom: solid 1px #212a31;
-    outline: none;
-    cursor: pointer;
-    font-family: "Roboto Condensed", sans-serif;
-    background: none;
-    font-size: 16px;
-    transition: all 0.3s;
-    &:hover {
-      background-color: #212a31;
-      color: white;
-      transform: scale(1.2);
-      border: solid 1px white;
-      border-radius: 0.4rem;
-      margin-left: 10px;
-    }
-  `;
+const RegisterButton = styled.button`
+  border: none;
+  border-bottom: solid 1px #212a31;
+  outline: none;
+  cursor: pointer;
+  font-family: "Roboto Condensed", sans-serif;
+  background: none;
+  font-size: 16px;
+  transition: all 0.3s;
+  &:hover {
+    background-color: #212a31;
+    color: white;
+    transform: scale(1.2);
+    border: solid 1px white;
+    border-radius: 0.4rem;
+    margin-left: 10px;
+  }
+`;
 
+function Login({ handleLogin }) {
   const emailRef = useRef();
   const passwordRef = useRef();
 

@@ -5,8 +5,8 @@ import {
   Input,
   PasswordChecks,
   Check,
+  toastConfig,
 } from "./styledElements";
-import { toastConfig } from "./styledElements";
 import { toast, ToastContainer } from "react-toastify";
 import { CheckSquare, XCircle } from "react-feather";
 

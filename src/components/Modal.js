@@ -1,7 +1,6 @@
 import React, { useRef, Fragment } from "react";
-import { Button, Input } from "./styledElements";
+import { Button, Input, toastConfig } from "./styledElements";
 import { toast, ToastContainer } from "react-toastify";
-import { toastConfig } from "./styledElements";
 
 function Modal({
   productId,

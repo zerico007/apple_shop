@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { ChevronDown } from "react-feather";
-import wave from "../assets/apple_shop_wave.svg";
 import Badge from "@material-ui/core/Badge";
 import { withStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
@@ -27,10 +26,22 @@ const Nav = styled.nav`
   height: 67px;
   padding: 10px;
   z-index: 8;
+  .mobile-menu {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-2.5rem, -2.5rem) scale(0);
+    transform-origin: 0% 0%;
+    transition: all 0.5s ease-in-out;
+  }
+  .mobile-menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(0) scale(1);
+  }
 `;
 
 const NavButton = styled.button`
-  width: ${(props) => (props.mobileSite ? "100%" : "120px")};
+  width: ${(props) => (props.mobileSite ? "50%" : "120px")};
   height: ${(props) => (props.mobileSite ? "2rem" : "60px")};
   background: ${(props) => (props.mobileSite ? "#333d51" : "none")};
   color: ${(props) => (props.mobileSite ? "#f4f3ea" : "#333d51")};
@@ -46,10 +57,9 @@ const NavButton = styled.button`
     color: #d3ac2b;
     transform: scale(1.1);
   }
-
   margin-right: ${(props) => (props.mobileSite ? "0" : "40px")};
   margin-top: ${(props) => (props.mobileSite ? "45px" : "10px")};
-  text-align: center;
+  text-align: ${(props) => (props.mobileSite ? "left" : "center")};
 `;
 
 const menuFadeDown = keyframes`
@@ -125,9 +135,7 @@ const MobileNavButtonsDiv = styled.div`
   flex-direction: column;
   z-index: 100;
   width: 105vw;
-  animation: enterTopRight 0.5s;
-  transform-origin: 0% 0%;
-  background-image: url("${wave}");
+  background-color: #333d51;
   height: 100vh;
 `;
 
@@ -162,6 +170,16 @@ function NavBar({ logout, getOrders, user, mobile, cartCount }) {
 
   const showNavDropDown = !mobile && showNavOptions;
 
+  const navigate = useNavigate();
+
+  const links = [
+    { route: "home", text: "Home" },
+    { route: "orders", text: isUserAdmin ? "Orders" : "My Orders" },
+    { route: "create-product", text: "Create Product" },
+    { route: "products", text: "Products" },
+    { route: "password", text: "Manage Password" },
+  ];
+
   const handleTranslucentOnScroll = () => {
     if (window.scrollY > 0) {
       setTranslucent(true);
@@ -181,6 +199,7 @@ function NavBar({ logout, getOrders, user, mobile, cartCount }) {
     return (
       <Link to="/apple_shop/cart">
         <div
+          onClick={() => mobile && setShowNav(false)}
           className="cart"
           style={{
             marginTop: "1rem",
@@ -248,33 +267,37 @@ function NavBar({ logout, getOrders, user, mobile, cartCount }) {
               </div>
               {showNavDropDown && (
                 <NavButtonsDiv>
-                  <Link to="/apple_shop/orders">
-                    <NavButton
-                      onClick={() => {
-                        getOrders(user.role);
-                        setShowNavOptions(false);
-                      }}
-                    >
-                      {isUserAdmin ? "Orders" : "My Orders"}
-                    </NavButton>
-                  </Link>
-                  {isUserAdmin && (
-                    <Link to="/apple_shop/create-product">
-                      <NavButton onClick={() => setShowNavOptions(false)}>
-                        Create a Product
-                      </NavButton>
-                    </Link>
-                  )}
-                  <Link to="/apple_shop/products">
-                    <NavButton onClick={() => setShowNavOptions(false)}>
-                      Products
-                    </NavButton>
-                  </Link>
-                  <Link to="/apple_shop/password">
-                    <NavButton onClick={() => setShowNavOptions(false)}>
-                      Manage Passwords
-                    </NavButton>
-                  </Link>
+                  {links.slice(1).map(({ route, text }) => {
+                    if (route === "create-product") {
+                      if (isUserAdmin) {
+                        return (
+                          <Link to={`/apple_shop/${route}`}>
+                            <NavButton
+                              onClick={() => {
+                                setShowNavOptions(false);
+                              }}
+                            >
+                              {text}
+                            </NavButton>
+                          </Link>
+                        );
+                      } else {
+                        return null;
+                      }
+                    }
+                    return (
+                      <Link to={`/apple_shop/${route}`}>
+                        <NavButton
+                          onClick={() => {
+                            setShowNavOptions(false);
+                            route === "orders" && getOrders(user.role);
+                          }}
+                        >
+                          {text}
+                        </NavButton>
+                      </Link>
+                    );
+                  })}
                   <NavButton onClick={logout}>Logout</NavButton>
                 </NavButtonsDiv>
               )}
@@ -290,6 +313,7 @@ function NavBar({ logout, getOrders, user, mobile, cartCount }) {
               style={{
                 float: "left",
                 marginTop: "10px",
+                marginLeft: "30px",
                 width: "120px",
                 fontSize: "20px",
                 height: "50px",
@@ -304,51 +328,49 @@ function NavBar({ logout, getOrders, user, mobile, cartCount }) {
             <ShoppingCart />
           </>
         )}
-        {showNav && (
-          <MobileNavButtonsDiv onClick={() => mobile && setShowNav(!showNav)}>
-            <Link to="/apple_shop/home">
-              <NavButton mobileSite={true}>Home</NavButton>
-            </Link>
-            <Link to="/apple_shop/orders">
-              <NavButton mobileSite={true} onClick={() => getOrders(user.role)}>
-                {isUserAdmin ? "Orders" : "My Orders"}
+
+        <MobileNavButtonsDiv
+          className={showNav ? "mobile-menu open" : "mobile-menu"}
+          onClick={() => mobile && setShowNav(!showNav)}
+        >
+          {links.map(({ route, text }) => {
+            if (route === "create-product") {
+              if (isUserAdmin) {
+                return (
+                  <NavButton
+                    key={text}
+                    mobileSite={mobile}
+                    onClick={() => {
+                      navigate(`/apple_shop/${route}`);
+                    }}
+                  >
+                    {text}
+                  </NavButton>
+                );
+              } else {
+                return null;
+              }
+            }
+            return (
+              <NavButton
+                key={text}
+                mobileSite={mobile}
+                onClick={() => {
+                  navigate(`/apple_shop/${route}`);
+                  if (route === "orders") {
+                    getOrders(user.role);
+                  }
+                }}
+              >
+                {text}
               </NavButton>
-            </Link>
-            {isUserAdmin && (
-              <Link to="/apple_shop/create-product">
-                <NavButton mobileSite={true}>Create a Product</NavButton>
-              </Link>
-            )}
-            <Link to="/apple_shop/products">
-              <NavButton mobileSite={true}>Products</NavButton>
-            </Link>
-            <Link to="/apple_shop/password">
-              <NavButton mobileSite={true}>Manage Passwords</NavButton>
-            </Link>
-            <div
-              className="logout"
-              style={{
-                width: "80vw",
-                left: "0",
-                position: "relative",
-                border: "none",
-                display: "flex",
-                alignItems: "flex-start",
-                marginTop: "10vh",
-              }}
-            >
-              <Link>
-                <NavButton
-                  style={{ background: "none", color: "#333d51" }}
-                  mobileSite={true}
-                  onClick={logout}
-                >
-                  Logout
-                </NavButton>
-              </Link>
-            </div>
-          </MobileNavButtonsDiv>
-        )}
+            );
+          })}
+
+          <NavButton mobileSite={true} onClick={logout}>
+            Logout
+          </NavButton>
+        </MobileNavButtonsDiv>
       </Nav>
     </>
   );

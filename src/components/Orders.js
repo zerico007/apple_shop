@@ -2,17 +2,17 @@ import React from "react";
 import styled from "styled-components";
 import OrderView from "./OrderView";
 
-function Orders({ orders, mobile, addToCart }) {
-  const Wrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    top: 150px;
-    width: 100vw;
-    margin-left: auto;
-    margin-right: auto;
-  `;
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  top: 150px;
+  width: 100vw;
+  margin-left: auto;
+  margin-right: auto;
+`;
 
+function Orders({ orders, mobile, addToCart }) {
   return (
     <Wrapper>
       {!orders.length && (
@@ -23,7 +23,7 @@ function Orders({ orders, mobile, addToCart }) {
       {orders?.map((order, i) => (
         <OrderView
           total={order.order.OrderTotal}
-          user={order.order.user && order.order.user}
+          user={order.order.user ?? null}
           date={order.order.dateCreated}
           orderId={order.order.id}
           orderItems={order.order.items}
