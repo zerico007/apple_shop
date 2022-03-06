@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { ToastOptions } from "react-toastify";
 
 const FormDiv = styled.div`
   top: 150px;
@@ -75,7 +76,7 @@ const Check = styled.div`
   flex-direction: row;
 `;
 
-const toastConfig = {
+const toastConfig: ToastOptions = {
   position: "top-center",
   autoClose: 1500,
   hideProgressBar: false,

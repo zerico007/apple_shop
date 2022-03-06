@@ -15,7 +15,7 @@ shopApiInstance.interceptors.response.use(
       shopApiInstance.defaults.headers.common["Authorization"] &&
       shopApiInstance.defaults.headers.common["Authorization"].split(" ")[1];
     if (currentToken) {
-      const currentDecodedToken = jwt_decode(currentToken);
+      const currentDecodedToken: any = jwt_decode(currentToken);
       const { exp } = currentDecodedToken;
       if (exp * 1000 < Date.now()) {
         console.log("token expired");

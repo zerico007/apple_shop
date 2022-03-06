@@ -23,31 +23,25 @@ import {
   loginFailure,
   loginSuccess,
   logout,
-} from "./redux/resources/user";
-import {
   getOrdersFailure,
   getOrdersRequest,
   getOrdersSuccess,
-} from "./redux/resources/orders";
-import {
   getProductsFailure,
   getProductsRequest,
   getProductsSuccess,
-} from "./redux/resources/products";
-import {
   getCartSuccess,
   getCartRequest,
   getCartFailure,
-} from "./redux/resources/cart";
-import { useDispatch, useSelector } from "react-redux";
+} from "./redux/resources";
+import { useAppDispatch, useAppSelector } from "./redux/store";
 
 function App() {
   const [mobile, setMobile] = usePersistedState("mobile", false);
   const [progress, setProgress] = usePersistedState("progress", 0);
   const [cartCount, setCartCount] = useState(0);
 
-  const dispatch = useDispatch();
-  const { user, orders, products, cart } = useSelector((state) => state);
+  const dispatch = useAppDispatch();
+  const { user, orders, products, cart } = useAppSelector();
 
   useEffect(() => {
     const count = cart.items
@@ -104,7 +98,7 @@ function App() {
   };
 
   const getUser = (token) => {
-    const decodedUser = jwt_decode(token);
+    const decodedUser: any = jwt_decode(token);
     const { username, email, role, password, userId } = decodedUser;
     const loggedInUser = { username, email, role, password, userId, token };
     dispatch(loginSuccess(loggedInUser));
@@ -334,7 +328,6 @@ function App() {
       )}
       <Routes>
         <Route
-          exact
           path="/apple_shop"
           element={<Login handleLogin={handleLogin} />}
         />
