@@ -1,21 +1,21 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState, FormEvent } from "react";
 import { FormDiv, Button, Input } from "./styledElements";
 
-function CreateProduct({ addProduct }) {
-  const [image, setImage] = useState();
+function CreateProduct({ addProduct }: { addProduct: any }) {
+  const [image, setImage] = useState<File | null>(null);
 
-  const nameRef = useRef();
-  const priceRef = useRef();
-  const videoRef = useRef();
+  const nameRef = useRef<HTMLInputElement | null>(null);
+  const priceRef = useRef<HTMLInputElement | null>(null);
+  const videoRef = useRef<HTMLInputElement | null>(null);
 
-  const handleCreateProduct = (e) => {
+  const handleCreateProduct = (e: FormEvent) => {
     e.preventDefault();
 
     const data = new FormData();
-    data.append("productImage", image, image.name);
-    data.append("name", nameRef.current.value);
-    data.append("price", priceRef.current.value);
-    data.append("videoURL", videoRef.current.value);
+    data.append("productImage", image as Blob, image?.name);
+    data.append("name", nameRef.current?.value as string);
+    data.append("price", priceRef.current?.value as string);
+    data.append("videoURL", videoRef.current?.value as string);
     const config = {
       headers: {
         "content-type": "multipart/form-data",
@@ -48,7 +48,7 @@ function CreateProduct({ addProduct }) {
           required
         />
         <Input
-          onChange={(e) => setImage(e.target.files[0])}
+          onChange={(e) => setImage(e.target.files?.[0] as File)}
           type="file"
           name="productImage"
           id="productImage"

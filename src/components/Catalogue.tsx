@@ -15,6 +15,16 @@ const Wrapper = styled.div`
   margin-right: auto;
 `;
 
+interface CatalogueProps {
+  products: any;
+  user: User;
+  deleteProduct: any;
+  updateProductAvailability: any;
+  updateProduct: any;
+  addToCart: any;
+  mobile: boolean;
+}
+
 function Catalogue({
   products,
   user,
@@ -23,10 +33,10 @@ function Catalogue({
   mobile,
   updateProduct,
   addToCart,
-}) {
+}: CatalogueProps) {
   const [search, setSearch] = useState("");
 
-  const updateSearch = (term) => {
+  const updateSearch = (term: string) => {
     setSearch(term);
   };
 
@@ -34,7 +44,7 @@ function Catalogue({
     <Wrapper>
       <SearchBar updateSearch={updateSearch} search={search} />
       {search === "" &&
-        products.map((product, i) => (
+        products.map((product: any, i: number) => (
           <ProductView
             price={product.price}
             title={product.name}
@@ -55,7 +65,7 @@ function Catalogue({
         ))}
       {search !== "" &&
         products.map(
-          (product, i) =>
+          (product: any, i: number) =>
             product.name.toLowerCase().includes(search.toLowerCase()) && (
               <ProductView
                 price={product.price}

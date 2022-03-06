@@ -1,20 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import existingStore from "../index";
 
-const initialState = existingStore
+const initialState: User = existingStore
   ? existingStore.user // if user is logged in, get user from session storage
   : {
-      user: {
-        userId: "",
-        username: "",
-        email: "",
-        password: "",
-        role: "",
-        token: "",
-        isLoggedIn: false,
-        isLoading: false,
-        error: null,
-      },
+      userId: "",
+      username: "",
+      email: "",
+      role: "",
+      token: "",
+      isLoggedIn: false,
+      isLoading: false,
+      error: null,
     };
 
 const userSlice = createSlice({
@@ -22,34 +19,32 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     login: (state) => {
-      state.user.isLoading = true;
-      state.user.error = null;
+      state.isLoading = true;
+      state.error = null;
     },
     loginSuccess: (state, { payload }) => {
-      state.user.isLoading = false;
-      state.user.isLoggedIn = true;
-      state.user.userId = payload.userId;
-      state.user.username = payload.username;
-      state.user.email = payload.email;
-      state.user.password = payload.password;
-      state.user.role = payload.role;
-      state.user.token = payload.token;
+      state.isLoading = false;
+      state.isLoggedIn = true;
+      state.userId = payload.userId;
+      state.username = payload.username;
+      state.email = payload.email;
+      state.role = payload.role;
+      state.token = payload.token;
     },
     loginFailure: (state, action) => {
-      state.user.isLoading = false;
-      state.user.error = action.payload;
+      state.isLoading = false;
+      state.error = action.payload;
     },
     logout: (state) => {
-      state.user.isLoggedIn = false;
-      state.user.userId = "";
-      state.user.username = "";
-      state.user.email = "";
-      state.user.password = "";
-      state.user.role = "";
-      state.user.token = "";
+      state.isLoggedIn = false;
+      state.userId = "";
+      state.username = "";
+      state.email = "";
+      state.role = "";
+      state.token = "";
     },
     resetUsertoken: (state, { payload }) => {
-      state.user.token = payload;
+      state.token = payload;
     },
   },
 });

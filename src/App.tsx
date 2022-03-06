@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import { FormEvent, Fragment, useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import LoadingBar from "react-top-loading-bar";
@@ -45,7 +45,7 @@ function App() {
 
   useEffect(() => {
     const count = cart.items
-      ? cart.items.reduce((acc, item) => acc + item.quantity, 0)
+      ? cart.items.reduce((acc: number, item: any) => acc + item.quantity, 0)
       : 0;
     setCartCount(count);
   }, [cart]);
@@ -74,7 +74,7 @@ function App() {
     }
   };
 
-  const getOrders = async (role) => {
+  const getOrders = async (role: string) => {
     const url = role === "administrator" ? "/orders/admin" : "/orders";
     try {
       const response = await shopApiInstance.get(url);
@@ -97,14 +97,17 @@ function App() {
     }
   };
 
-  const getUser = (token) => {
+  const getUser = (token: string) => {
     const decodedUser: any = jwt_decode(token);
-    const { username, email, role, password, userId } = decodedUser;
-    const loggedInUser = { username, email, role, password, userId, token };
+    const { username, email, role, userId } = decodedUser;
+    const loggedInUser = { username, email, role, userId, token };
     dispatch(loginSuccess(loggedInUser));
   };
 
-  const handleLogin = async (e, params) => {
+  const handleLogin = async (
+    e: FormEvent,
+    params: { email: string; password: string }
+  ) => {
     setProgress(40);
     e.preventDefault();
     dispatch(login());
@@ -113,7 +116,8 @@ function App() {
     dispatch(getCartRequest());
     try {
       const response = await shopApiInstance.post("/users/signin", params);
-      e.target.reset();
+      const form = e.target as HTMLFormElement;
+      form.reset();
       setProgress(100);
       setBearerToken(response.data.token);
       getUser(response.data.token);
@@ -129,13 +133,14 @@ function App() {
         if (err.message.includes("401"))
           return "Email/Password combination incorrect. Try again.";
         if (err.message.includes("404")) return "User not found.";
+        return "Something went wrong. Try again.";
       };
       dispatch(loginFailure(error()));
       toast.error(error(), toastConfig);
     }
   };
 
-  const handleRegister = async (e, params) => {
+  const handleRegister = async (e: FormEvent, params: any) => {
     setProgress(40);
     e.preventDefault();
     try {
@@ -151,7 +156,7 @@ function App() {
     }
   };
 
-  const addProduct = async (e, params) => {
+  const addProduct = async (e: FormEvent, params: any) => {
     dispatch(getProductsRequest());
     try {
       const response = await shopApiInstance.post("/products", params);
@@ -164,11 +169,12 @@ function App() {
       dispatch(getProductsFailure(err));
       toast.error(err.message, toastConfig);
     } finally {
-      e.target.reset();
+      const form = e.target as HTMLFormElement;
+      form.reset();
     }
   };
 
-  const updateProduct = async (e, id, params) => {
+  const updateProduct = async (e: FormEvent, id: string, params: any) => {
     dispatch(getProductsRequest());
     try {
       const response = await shopApiInstance.put(`/products/${id}`, params);
@@ -181,11 +187,12 @@ function App() {
       dispatch(getProductsFailure(err));
       toast.error(err.message, toastConfig);
     } finally {
-      e.target.reset();
+      const form = e.target as HTMLFormElement;
+      form.reset();
     }
   };
 
-  const deleteProduct = async (id) => {
+  const deleteProduct = async (id: string) => {
     dispatch(getProductsRequest());
     const deleteParams = { productId: id };
     try {
@@ -208,7 +215,7 @@ function App() {
     }
   };
 
-  const updatePassword = async (e, params) => {
+  const updatePassword = async (e: FormEvent, params: any) => {
     try {
       const response = await shopApiInstance.put(
         `/users/${user.userId}`,
@@ -224,11 +231,12 @@ function App() {
         : err.message;
       toast.error(error, toastConfig);
     } finally {
-      e.target.reset();
+      const form = e.target as HTMLFormElement;
+      form.reset();
     }
   };
 
-  const updateProductAvailability = async (path) => {
+  const updateProductAvailability = async (path: string) => {
     dispatch(getProductsRequest());
     try {
       const response = await shopApiInstance.put(path);
@@ -243,7 +251,7 @@ function App() {
     }
   };
 
-  const addToCart = async (params) => {
+  const addToCart = async (params: any) => {
     dispatch(getCartRequest());
     try {
       const response = await shopApiInstance.post("/cart", params);
@@ -257,7 +265,7 @@ function App() {
     }
   };
 
-  const updateCart = async (params) => {
+  const updateCart = async (params: any) => {
     try {
       const response = await shopApiInstance.put("/cart/update", params);
       if (response.data) {
@@ -270,7 +278,7 @@ function App() {
     }
   };
 
-  const removeFromCart = async (params) => {
+  const removeFromCart = async (params: any) => {
     dispatch(getCartRequest());
     try {
       const response = await shopApiInstance.put("/cart/remove", params);
@@ -317,11 +325,11 @@ function App() {
         onLoaderFinished={() => setProgress(0)}
       />
       <ToastContainer />
-      {user.user.isLoggedIn && (
+      {user.isLoggedIn && (
         <NavBar
           logout={logoutUser}
           getOrders={getOrders}
-          user={user.user}
+          user={user}
           mobile={mobile}
           cartCount={cartCount}
         />
@@ -341,7 +349,7 @@ function App() {
           element={
             <Catalogue
               products={products.products}
-              user={user.user}
+              user={user}
               addToCart={addToCart}
               deleteProduct={deleteProduct}
               updateProductAvailability={updateProductAvailability}
@@ -380,7 +388,7 @@ function App() {
         <Route
           path="/apple_shop/password"
           element={
-            <PasswordUpdate user={user.user} updatePassword={updatePassword} />
+            <PasswordUpdate user={user} updatePassword={updatePassword} />
           }
         />
       </Routes>

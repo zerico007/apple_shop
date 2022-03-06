@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, ChangeEventHandler } from "react";
 import styled from "styled-components";
 import { IMAGES_URL } from "../constants";
 import { Button } from "./styledElements";
@@ -45,6 +45,16 @@ const AmountSelect = styled.select`
   }
 `;
 
+interface CartItemProps {
+  updateCart: any;
+  productId: string;
+  image: string;
+  title: string;
+  price: number;
+  quantity: number;
+  removeFromCart: any;
+}
+
 const CartItem = ({
   updateCart,
   productId,
@@ -53,11 +63,11 @@ const CartItem = ({
   price,
   quantity,
   removeFromCart,
-}) => {
+}: CartItemProps) => {
   const [amount, setAmount] = useState(quantity);
 
-  const handleAmountChange = (e) => {
-    setAmount(e.target.value);
+  const handleAmountChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    setAmount(+e.target.value);
     const params = { product: productId, quantity: e.target.value };
     updateCart(params);
   };

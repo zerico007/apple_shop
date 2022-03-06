@@ -1,20 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 
-// function usePersistedState<T>(
-//   key: string,
-//   defaultValue: T
-// ): [T, Dispatch<SetStateAction<T>>] {
-//   const [state, setState] = useState<T>(
-//     () => JSON.parse(sessionStorage.getItem(key)) || defaultValue
-//   );
-//   useEffect(() => {
-//     sessionStorage.setItem(key, JSON.stringify(state));
-//   }, [key, state]);
-//   return [state, setState];
-// }
-
-function usePersistedState(key, defaultValue) {
-  const [state, setState] = useState(
+function usePersistedState<T>(
+  key: string,
+  defaultValue: T
+): [T, Dispatch<SetStateAction<T>>] {
+  const [state, setState] = useState<T>(
     () => JSON.parse(sessionStorage.getItem(key)) || defaultValue
   );
   useEffect(() => {

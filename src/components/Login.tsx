@@ -1,4 +1,4 @@
-import React, { useRef, Fragment } from "react";
+import { useRef, Fragment, FormEvent } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { FormDiv, Button, Input } from "./styledElements";
@@ -22,14 +22,21 @@ const RegisterButton = styled.button`
   }
 `;
 
-function Login({ handleLogin }) {
-  const emailRef = useRef();
-  const passwordRef = useRef();
+function Login({
+  handleLogin,
+}: {
+  handleLogin: (
+    e: FormEvent,
+    params: { email: string; password: string }
+  ) => Promise<void>;
+}) {
+  const emailRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     const params = {
-      email: emailRef.current.value,
-      password: passwordRef.current.value,
+      email: emailRef.current?.value as string,
+      password: passwordRef.current?.value as string,
     };
     handleLogin(e, params);
   };

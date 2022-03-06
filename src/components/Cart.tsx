@@ -17,6 +17,15 @@ const CartWrapper = styled.div`
   border-radius: 0.2rem;
 `;
 
+interface CartProps {
+  cart: any;
+  updateCart: any;
+  count: number;
+  removeFromCart: any;
+  placeOrder: any;
+  mobile: boolean;
+}
+
 const Cart = ({
   cart,
   updateCart,
@@ -24,7 +33,7 @@ const Cart = ({
   removeFromCart,
   placeOrder,
   mobile,
-}) => {
+}: CartProps) => {
   return (
     <CartWrapper>
       <div
@@ -50,7 +59,7 @@ const Cart = ({
           <Button onClick={placeOrder}>Place Order</Button>
         )}
       </div>
-      {cart.items?.map((item, i) => (
+      {cart.items?.map((item: any, i: number) => (
         <CartItem
           image={item.product.productImage}
           title={item.product.name}
