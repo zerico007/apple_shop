@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { IMAGES_URL } from "../constants";
 import { Button } from "./styledElements";
@@ -25,6 +24,16 @@ const OrderItemDiv = styled.div`
   background: white;
 `;
 
+interface OrderItemProps {
+  image: string;
+  title: string;
+  productId: string;
+  addToCart: (params: { product: string; quantity: number }) => Promise<void>;
+  price: number;
+  quantity: number;
+  subtotal: number;
+}
+
 function OrderItem({
   image,
   title,
@@ -33,7 +42,7 @@ function OrderItem({
   price,
   quantity,
   subtotal,
-}) {
+}: OrderItemProps) {
   const handleBuyAgain = () => {
     const params = { product: productId, quantity: 1 };
     addToCart(params);

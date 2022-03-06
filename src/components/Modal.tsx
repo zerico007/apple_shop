@@ -1,6 +1,15 @@
-import React, { useRef, Fragment } from "react";
+import { useRef, Fragment, FormEvent } from "react";
 import { Button, Input, toastConfig } from "./styledElements";
 import { toast, ToastContainer } from "react-toastify";
+
+interface ModalProps {
+  productId: string;
+  toggle: (arg: string) => void;
+  display: string;
+  deleteProduct: (id: string) => Promise<void>;
+  addToCart: (params: { product: string; quantity: number }) => Promise<void>;
+  UpdateProductModal: any;
+}
 
 function Modal({
   productId,
@@ -9,19 +18,21 @@ function Modal({
   deleteProduct,
   addToCart,
   UpdateProductModal,
-}) {
-  const quantityRef = useRef();
+}: ModalProps) {
+  const quantityRef = useRef<HTMLInputElement | null>(null);
 
-  const handleAddToCart = (e) => {
+  const handleAddToCart = (e: FormEvent) => {
     e.preventDefault();
     toggle("modal");
-    const quantity = quantityRef.current.value;
-    if (quantity === "0")
+    const quantity = quantityRef.current?.value as string;
+    if (quantity === "0") {
       return toast.error("Please enter a quantity", toastConfig);
+    }
     console.log(productId, quantity);
-    const params = { product: productId, quantity };
+    const params = { product: productId, quantity: +quantity };
     addToCart(params);
-    e.target.reset();
+    const form = e.target as HTMLFormElement;
+    return form.reset();
   };
 
   return (

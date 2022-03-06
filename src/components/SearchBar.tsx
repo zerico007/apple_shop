@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { Input } from "./styledElements";
 
@@ -12,7 +11,13 @@ const SearchDiv = styled.div`
   margin-bottom: 20px;
 `;
 
-function SearchBar({ search, updateSearch }) {
+function SearchBar({
+  search,
+  updateSearch,
+}: {
+  search: string;
+  updateSearch: (term: string) => void;
+}) {
   return (
     <SearchDiv key={"searching"}>
       <Input

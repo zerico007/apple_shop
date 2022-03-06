@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { ChevronDown } from "react-feather";
@@ -40,7 +40,7 @@ const Nav = styled.nav`
   }
 `;
 
-const NavButton = styled.button`
+const NavButton = styled.button<{ mobileSite?: boolean }>`
   width: ${(props) => (props.mobileSite ? "50%" : "120px")};
   height: ${(props) => (props.mobileSite ? "2rem" : "60px")};
   background: ${(props) => (props.mobileSite ? "#333d51" : "none")};
@@ -139,8 +139,16 @@ const MobileNavButtonsDiv = styled.div`
   height: 100vh;
 `;
 
-function NavBar({ logout, getOrders, user, mobile, cartCount }) {
-  const logoStyle = {
+interface NavBarProps {
+  mobile: boolean;
+  logout: () => void;
+  cartCount: number;
+  user: User;
+  getOrders: (role: string) => Promise<void>;
+}
+
+function NavBar({ logout, getOrders, user, mobile, cartCount }: NavBarProps) {
+  const logoStyle: CSSProperties = {
     float: "left",
     marginLeft: "20px",
     marginTop: "1.5rem",
@@ -148,7 +156,7 @@ function NavBar({ logout, getOrders, user, mobile, cartCount }) {
     fontSize: "24px",
   };
 
-  const greetingStyle = {
+  const greetingStyle: CSSProperties = {
     color: "#F4F3EA",
     fontSize: "14px",
     display: "flex",
@@ -157,7 +165,7 @@ function NavBar({ logout, getOrders, user, mobile, cartCount }) {
     marginTop: "0.7rem",
     justifyContent: "center",
     alignItems: "center",
-    zIndex: "101",
+    zIndex: 101,
     height: "auto",
     minHeight: "60px",
   };

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import { FormEvent, Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -31,7 +31,11 @@ const LoginButton = styled.button`
   }
 `;
 
-function Register({ handleRegister }) {
+function Register({
+  handleRegister,
+}: {
+  handleRegister: (e: FormEvent, params: any) => Promise<void>;
+}) {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -41,7 +45,7 @@ function Register({ handleRegister }) {
 
   const passwordsMatch = password === confirmPassword;
 
-  const validate = (e, params) => {
+  const validate = (e: FormEvent) => {
     if (!passwordsMatch) {
       toast.error("Passwords do not match.", toastConfig);
       e.preventDefault();
@@ -59,7 +63,7 @@ function Register({ handleRegister }) {
       e.preventDefault();
     }
     if (username && email && passwordsMatch) {
-      params = { email, password, username };
+      const params = { email, password, username };
       handleRegister(e, params);
     }
   };

@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import OrderItem from "./OrderItem";
 
@@ -16,6 +15,16 @@ const OrderWrapper = styled.div`
   border-radius: 0.4rem;
 `;
 
+interface OrderViewProps {
+  mobile: boolean;
+  date: string;
+  total: number;
+  orderId: string;
+  user: User;
+  addToCart: (params: { product: string; quantity: number }) => Promise<void>;
+  orderItems: any;
+}
+
 function OrderView({
   date,
   total,
@@ -24,8 +33,8 @@ function OrderView({
   addToCart,
   orderItems,
   mobile,
-}) {
-  const orderHeader = (className, headerText, value) => {
+}: OrderViewProps) {
+  const orderHeader = (className: string, headerText: string, value: any) => {
     return (
       <div
         className={className}
@@ -62,7 +71,7 @@ function OrderView({
         {orderHeader("order-total", "TOTAL", total)}
         {!mobile && orderHeader("order-number", "ORDER #", orderId)}
       </div>
-      {orderItems?.map((item, i) => (
+      {orderItems?.map((item: any, i: number) => (
         <OrderItem
           image={item.productImage}
           title={item.product}

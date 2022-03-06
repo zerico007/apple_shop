@@ -34,6 +34,7 @@ import {
   getCartFailure,
 } from "./redux/resources";
 import { useAppDispatch, useAppSelector } from "./redux/store";
+import { AxiosRequestConfig } from "axios";
 
 function App() {
   const [mobile, setMobile] = usePersistedState("mobile", false);
@@ -44,8 +45,8 @@ function App() {
   const { user, orders, products, cart } = useAppSelector();
 
   useEffect(() => {
-    const count = cart.items
-      ? cart.items.reduce((acc: number, item: any) => acc + item.quantity, 0)
+    const count: number = cart.items
+      ? cart.items.reduce((acc: number, item: any) => acc + +item.quantity, 0)
       : 0;
     setCartCount(count);
   }, [cart]);
@@ -99,8 +100,8 @@ function App() {
 
   const getUser = (token: string) => {
     const decodedUser: any = jwt_decode(token);
-    const { username, email, role, userId } = decodedUser;
-    const loggedInUser = { username, email, role, userId, token };
+    const { username, password, email, role, userId } = decodedUser;
+    const loggedInUser = { username, email, role, password, userId, token };
     dispatch(loginSuccess(loggedInUser));
   };
 
@@ -174,10 +175,19 @@ function App() {
     }
   };
 
-  const updateProduct = async (e: FormEvent, id: string, params: any) => {
+  const updateProduct = async (
+    e: FormEvent,
+    id: string,
+    params: any,
+    config?: AxiosRequestConfig
+  ) => {
     dispatch(getProductsRequest());
     try {
-      const response = await shopApiInstance.put(`/products/${id}`, params);
+      const response = await shopApiInstance.put(
+        `/products/${id}`,
+        params,
+        config
+      );
       if (response.data) {
         toast.success("Product successfully updated", toastConfig);
         getProducts();

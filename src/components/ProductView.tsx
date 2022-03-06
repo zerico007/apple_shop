@@ -1,8 +1,9 @@
-import React, { Fragment, useState, useRef } from "react";
+import { Fragment, useState, useRef, FormEvent } from "react";
 import styled from "styled-components";
 import { Button, FormDiv, Input } from "./styledElements";
 import Modal from "./Modal";
 import ProductVideo from "./ProductVideo";
+import { AxiosRequestConfig } from "axios";
 
 const ProductDiv = styled.div`
   position: relative;
@@ -33,6 +34,26 @@ const ImageDiv = styled.div`
   }
 `;
 
+interface ProductViewProps {
+  img_url: string;
+  price: number;
+  title: string;
+  id: string;
+  videoURL: string;
+  user: User;
+  deleteProduct: (id: string) => Promise<void>;
+  available: boolean;
+  addToCart: (params: { product: string; quantity: number }) => Promise<void>;
+  updateProductAvailability: (path: string) => Promise<void>;
+  updateProduct: (
+    e: FormEvent,
+    id: string,
+    params: any,
+    config?: AxiosRequestConfig
+  ) => Promise<void>;
+  mobile: boolean;
+}
+
 function ProductView({
   img_url,
   price,
@@ -46,21 +67,21 @@ function ProductView({
   mobile,
   updateProduct,
   addToCart,
-}) {
+}: ProductViewProps) {
   const [closeButton, setCloseButton] = useState(false);
   const [mountVideo, setMountVideo] = useState(false);
   const [display, setDisplay] = useState("");
-  const [updatedImage, setUpdatedImage] = useState();
+  const [updatedImage, setUpdatedImage] = useState<File | null>(null);
 
-  const newPrice = useRef();
-  const newTitle = useRef();
+  const newPrice = useRef<HTMLInputElement>(null);
+  const newTitle = useRef<HTMLInputElement>(null);
 
   const showCloseButton = () => {
     setTimeout(() => setCloseButton(!closeButton), 1500);
   };
 
-  const toggle = (thing) => {
-    thing = document.querySelector(`.${thing}-${id}`);
+  const toggle = (arg: string) => {
+    const thing = document.querySelector(`.${arg}-${id}`) as HTMLElement;
     thing.classList.toggle("on");
   };
 
@@ -71,16 +92,16 @@ function ProductView({
     updateProductAvailability(path);
   };
 
-  const handleUpdateProduct = (e) => {
+  const handleUpdateProduct = (e: FormEvent) => {
     e.preventDefault();
 
     const data = new FormData();
     updatedImage &&
       data.append("productImage", updatedImage, updatedImage.name);
-    newTitle.current.value !== title &&
-      data.append("newName", newTitle.current.value);
-    newPrice.current.value !== price &&
-      data.append("newPrice", newPrice.current.value);
+    newTitle.current?.value !== title &&
+      data.append("newName", newTitle.current?.value as string);
+    +newPrice.current?.value! !== price &&
+      data.append("newPrice", newPrice.current?.value as string);
     const config = {
       headers: {
         "content-type": "multipart/form-data",
@@ -118,7 +139,7 @@ function ProductView({
             defaultValue={price}
           />
           <Input
-            onChange={(e) => setUpdatedImage(e.target.files[0])}
+            onChange={(e) => setUpdatedImage(e.target.files?.[0] as File)}
             type="file"
             name="productImage"
             id="productImage"
@@ -145,7 +166,6 @@ function ProductView({
       {mountVideo && (
         <ProductVideo
           videoURL={videoURL}
-          toggle={toggle}
           productId={id}
           showCloseButton={showCloseButton}
           closeButton={closeButton}

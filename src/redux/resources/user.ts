@@ -9,6 +9,7 @@ const initialState: User = existingStore
       email: "",
       role: "",
       token: "",
+      password: "",
       isLoggedIn: false,
       isLoading: false,
       error: null,
@@ -27,6 +28,7 @@ const userSlice = createSlice({
       state.isLoggedIn = true;
       state.userId = payload.userId;
       state.username = payload.username;
+      state.password = payload.password;
       state.email = payload.email;
       state.role = payload.role;
       state.token = payload.token;
@@ -39,6 +41,7 @@ const userSlice = createSlice({
       state.isLoggedIn = false;
       state.userId = "";
       state.username = "";
+      state.password = "";
       state.email = "";
       state.role = "";
       state.token = "";

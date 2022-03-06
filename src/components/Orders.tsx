@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import OrderView from "./OrderView";
 
@@ -12,7 +11,13 @@ const Wrapper = styled.div`
   margin-right: auto;
 `;
 
-function Orders({ orders, mobile, addToCart }) {
+interface OrdersProps {
+  orders: any;
+  addToCart: (params: { product: string; quantity: number }) => Promise<void>;
+  mobile: boolean;
+}
+
+function Orders({ orders, mobile, addToCart }: OrdersProps) {
   return (
     <Wrapper>
       {!orders.length && (
@@ -20,7 +25,7 @@ function Orders({ orders, mobile, addToCart }) {
           No orders placed yet!
         </h2>
       )}
-      {orders?.map((order, i) => (
+      {orders?.map((order: any, i: number) => (
         <OrderView
           total={order.order.OrderTotal}
           user={order.order.user ?? null}

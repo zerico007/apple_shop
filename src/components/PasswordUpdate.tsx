@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { FormEvent, useState } from "react";
 import {
   FormDiv,
   Button,
@@ -10,14 +10,20 @@ import {
 import { toast, ToastContainer } from "react-toastify";
 import { CheckSquare, XCircle } from "react-feather";
 
-function PasswordUpdate({ user, updatePassword }) {
+function PasswordUpdate({
+  user,
+  updatePassword,
+}: {
+  user: User;
+  updatePassword: (e: FormEvent, params: any) => Promise<void>;
+}) {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const passwordsMatch = newPassword === confirmPassword;
 
-  const handlePasswordUpdate = (e) => {
+  const handlePasswordUpdate = (e: FormEvent) => {
     e.preventDefault();
     if (!passwordsMatch) {
       return toast.error("Passwords do not match", toastConfig);
@@ -27,7 +33,7 @@ function PasswordUpdate({ user, updatePassword }) {
       newPassword,
       currentPassword,
     };
-    updatePassword(e, params);
+    return updatePassword(e, params);
   };
 
   const characterCountRegex = /.{8,}/;
