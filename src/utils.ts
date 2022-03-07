@@ -5,7 +5,7 @@ function usePersistedState<T>(
   defaultValue: T
 ): [T, Dispatch<SetStateAction<T>>] {
   const [state, setState] = useState<T>(
-    () => JSON.parse(sessionStorage.getItem(key)) || defaultValue
+    () => JSON.parse(sessionStorage.getItem(key) as string) ?? defaultValue
   );
   useEffect(() => {
     sessionStorage.setItem(key, JSON.stringify(state));
